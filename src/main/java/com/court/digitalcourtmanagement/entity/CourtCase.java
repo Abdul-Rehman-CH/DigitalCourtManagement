@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "cases")
-public class Case{
+public class CourtCase{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,7 +20,7 @@ public class Case{
 
     private LocalDate filingDate;
 
-    public Case() {
+    public CourtCase() {
     }
 
     public Long getId() {

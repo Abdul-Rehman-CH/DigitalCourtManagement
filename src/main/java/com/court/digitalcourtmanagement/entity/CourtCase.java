@@ -9,39 +9,51 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "cases")
 public class CourtCase{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
+    private Long CaseId;    
     private String title;
     private String description;
     private String status;
     private LocalDate filingDate;
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference(value="judge-case")
     private Judge judgeAssigned;
     public Judge getJudge() {
-        return judgeAssigned;
+        return this.judgeAssigned;
     }
 
     public void setJudge(Judge judge) {
         this.judgeAssigned = judge;
     }
+    @ManyToOne
+    @JsonBackReference(value="lawyer-case")
+    private Lawyer lawyerAssigned;
+
+    public Lawyer getLawyer(){
+        return this.lawyerAssigned;
+    }
+    public void setLawyer(Lawyer lawyer){
+        this.lawyerAssigned=lawyer;
+    }
+
+    @ManyToOne
+    @JsonBackReference(value = "client-case")
+    private Client client;
 
     public CourtCase() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getCaseId() {
+        return CaseId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCaseId(Long id) {
+        this.CaseId = id;
     }
 
     public String getTitle() {

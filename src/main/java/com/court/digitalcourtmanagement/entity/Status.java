@@ -1,0 +1,8 @@
+package com.court.digitalcourtmanagement.entity;
+
+public enum Status {
+    ACTIVE,
+    INACTIVE,
+    ON_LEAVE,
+    SUSPENDED
+}

@@ -27,11 +27,26 @@ public class CourtCaseServiceImplementation implements CourtCaseService{
     @Autowired
     private LawyerRepository lawyerrepository;
 
-    @Override
-    public CourtCase CreateCase(CourtCase newcase){
-        return caserepository.save(newcase);
+@Override
+public CourtCase CreateCase(CourtCase c) {
+
+    if (c.getClient() == null || c.getClient().getId() == null) {
+        throw new RuntimeException("Client ID is required");
     }
 
+    Client client = clientrepository.findById(c.getClient().getId())
+            .orElseThrow(() -> new RuntimeException("Client not found"));
+
+    c.setClient(client);
+    Judge judge = judgerepository.findAll()
+            .stream()
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("No judges available"));
+
+    c.setJudge(judge);
+
+    return caserepository.save(c);
+}
     @Override
     public CourtCase GetCaseById(Long id){
         return caserepository.findById(id)

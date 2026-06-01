@@ -76,6 +76,6 @@ public class ClientServiceImplementation implements ClientService {
     }
     @Override
     public List<?> GetClientCases(Long id) {
-    return caseRepository.findByClientId(id);
+    return caseRepository.findByClient_Id(id);
 }
 }

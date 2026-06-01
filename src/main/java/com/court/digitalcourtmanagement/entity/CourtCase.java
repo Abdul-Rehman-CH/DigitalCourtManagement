@@ -1,65 +1,42 @@
 package com.court.digitalcourtmanagement.entity;
+
 import java.time.LocalDate;
-
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "cases")
-public class CourtCase{
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "caseId"
+)
+public class CourtCase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long CaseId;    
+    private Long caseId;
+
     private String title;
     private String description;
     private String status;
     private LocalDate filingDate;
+
     @ManyToOne
-    @JsonBackReference(value="judge-case")
     private Judge judgeAssigned;
-    public Judge getJudge() {
-        return this.judgeAssigned;
-    }
 
-    public void setJudge(Judge judge) {
-        this.judgeAssigned = judge;
-    }
     @ManyToOne
-    @JsonBackReference(value="lawyer-case")
     private Lawyer lawyerAssigned;
-
-    public Lawyer getLawyer(){
-        return this.lawyerAssigned;
-    }
-    public void setLawyer(Lawyer lawyer){
-        this.lawyerAssigned=lawyer;
-    }
-
     @ManyToOne
-    @JsonBackReference(value = "client-case")
     private Client client;
-        public Client getClient(){
-        return this.client;
-    }
-    public void setClient(Client cl){
-        this.client=cl;
-    }
-
-    public CourtCase() {
-    }
 
     public Long getCaseId() {
-        return CaseId;
+        return caseId;
     }
 
-    public void setCaseId(Long id) {
-        this.CaseId = id;
+    public void setCaseId(Long caseId) {
+        this.caseId = caseId;
     }
 
     public String getTitle() {
@@ -94,5 +71,27 @@ public class CourtCase{
         this.filingDate = filingDate;
     }
 
+    public Judge getJudge() {
+        return judgeAssigned;
+    }
 
+    public void setJudge(Judge judgeAssigned) {
+        this.judgeAssigned = judgeAssigned;
+    }
+
+    public Lawyer getLawyer() {
+        return lawyerAssigned;
+    }
+
+    public void setLawyer(Lawyer lawyerAssigned) {
+        this.lawyerAssigned = lawyerAssigned;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
 }

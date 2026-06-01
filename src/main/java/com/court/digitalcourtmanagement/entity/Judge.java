@@ -1,27 +1,48 @@
 package com.court.digitalcourtmanagement.entity;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "judges")
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class,
+  property = "id"
+)
 public class Judge extends User {
 
+    private String judgeName;
+    private String courtRoom;
 
     @OneToMany(mappedBy = "judgeAssigned")
-    private List<CourtCase> casesAssigned;
+    private List<CourtCase> cases = new ArrayList<>();
 
-    public Judge() {}
-
-    public List<CourtCase> getCasesAssigned() {
-        return casesAssigned;
+    public String getJudgeName() {
+        return judgeName;
     }
 
-    public void setCasesAssigned(List<CourtCase> casesAssigned) {
-        this.casesAssigned = casesAssigned;
+    public void setJudgeName(String judgeName) {
+        this.judgeName = judgeName;
+    }
+
+    public String getCourtRoom() {
+        return courtRoom;
+    }
+
+    public void setCourtRoom(String courtRoom) {
+        this.courtRoom = courtRoom;
+    }
+
+    public List<CourtCase> getCases() {
+        return cases;
+    }
+
+    public void setCases(List<CourtCase> cases) {
+        this.cases = cases;
     }
 }

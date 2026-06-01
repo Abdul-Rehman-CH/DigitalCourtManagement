@@ -25,7 +25,7 @@ public class CaseController {
     }
 
     @PostMapping
-    public CourtCase CreateCase(@RequestBody CourtCase c) {
+    public CourtCase addCase(@RequestBody CourtCase c) {
         return courtCaseService.CreateCase(c);
     }
 

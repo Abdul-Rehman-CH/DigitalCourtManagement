@@ -3,6 +3,7 @@ package com.court.digitalcourtmanagement.Controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.court.digitalcourtmanagement.entity.Client;
 import com.court.digitalcourtmanagement.service.ClientService;
@@ -45,5 +46,13 @@ public class ClientController {
     @GetMapping("/{id}/cases")
     public List<?> GetClientCases(@PathVariable Long id) {
         return clientService.GetClientCases(id);
+    }
+    @PostMapping("/{id}/cnic-back")
+    public void uploadBack(@PathVariable Long id, @RequestParam MultipartFile file) {
+    clientService.UploadCNICBack(id, file);
+    }
+    @PostMapping("/{id}/cnic-front")
+    public void uploadFront(@PathVariable Long id, @RequestParam MultipartFile file) {
+    clientService.UploadCNICFront(id, file);
     }
 }

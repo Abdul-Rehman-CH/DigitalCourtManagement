@@ -35,16 +35,15 @@ public class LawyerServiceImplementation implements LawyerService {
         return lawyerRepository.findAll();
     }
 
-    @Override
-    public Lawyer UpdateLawyer(Long id, Lawyer updatedLawyer) {
+  @Override
+    public Lawyer UpdateLawyer(Long id, Lawyer l) {
         Lawyer existing = GetLawyerById(id);
 
-        existing.setName(updatedLawyer.getName());
-        existing.setEmail(updatedLawyer.getEmail());
-        existing.setContactNo(updatedLawyer.getContactNo());
-        existing.setStatus(updatedLawyer.getStatus());
-        existing.setSpec(updatedLawyer.getSpec());
-        existing.setBarCNum(updatedLawyer.getBarCNum());
+        existing.setName(l.getName());
+        existing.setEmail(l.getEmail());
+        existing.setContactNo(l.getContactNo());
+        existing.setBarNumber(l.getBarNumber());
+        existing.setSpecialization(l.getSpecialization());
 
         return lawyerRepository.save(existing);
     }

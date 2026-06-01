@@ -1,63 +1,62 @@
 package com.court.digitalcourtmanagement.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Clients")
+@Table(name = "clients")
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class,
+  property = "id"
+)
 public class Client extends User {
 
-    private String CnicNumber;
+    private String CNICNumber;
 
     @Lob
-    private byte[] CnicFrontImage;
+    private byte[] cnicFrontImage;
 
     @Lob
-    private byte[] CnicBackImage;
+    private byte[] cnicBackImage;
 
     @OneToMany(mappedBy = "client")
-    @JsonManagedReference(value = "client-case")
-    private List<CourtCase> Cases;
-
-    public Client() {
-    }
+    private List<CourtCase> cases = new ArrayList<>();
 
     public String getCnicNumber() {
-        return CnicNumber;
+        return CNICNumber;
     }
 
     public void setCnicNumber(String cnicNumber) {
-        this.CnicNumber = cnicNumber;
+        this.CNICNumber = cnicNumber;
     }
 
     public byte[] getCnicFrontImage() {
-        return CnicFrontImage;
+        return cnicFrontImage;
     }
 
     public void setCnicFrontImage(byte[] cnicFrontImage) {
-        this.CnicFrontImage = cnicFrontImage;
+        this.cnicFrontImage = cnicFrontImage;
     }
 
     public byte[] getCnicBackImage() {
-        return CnicBackImage;
+        return cnicBackImage;
     }
 
     public void setCnicBackImage(byte[] cnicBackImage) {
-        this.CnicBackImage = cnicBackImage;
+        this.cnicBackImage = cnicBackImage;
     }
 
     public List<CourtCase> getCases() {
-        return Cases;
+        return cases;
     }
 
     public void setCases(List<CourtCase> cases) {
-        this.Cases = cases;
+        this.cases = cases;
     }
-    
 }

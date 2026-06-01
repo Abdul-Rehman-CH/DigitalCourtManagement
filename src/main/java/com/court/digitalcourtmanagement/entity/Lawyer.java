@@ -1,43 +1,47 @@
 package com.court.digitalcourtmanagement.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "lawyers")
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class,
+  property = "id"
+)
 public class Lawyer extends User {
-    private String Specialization;
-    private String BarCouncilNumber;
+
+    private String barNumber,specialization;
 
     @OneToMany(mappedBy = "lawyerAssigned")
-    private List<CourtCase> casesAssigned;
+    private List<CourtCase> cases = new ArrayList<>();
 
-
-
-    public String getSpec() {
-        return Specialization;
+    public String getBarNumber() {
+        return barNumber;
     }
 
-    public void setSpec(String specialization) {
-        this.Specialization = specialization;
+    public void setBarNumber(String barNumber) {
+        this.barNumber = barNumber;
     }
 
-    public String getBarCNum() {
-        return BarCouncilNumber;
+    public String getSpecialization() {
+        return specialization;
     }
 
-    public void setBarCNum(String barCouncilNumber) {
-        this.BarCouncilNumber = barCouncilNumber;
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
     }
 
-    public List<CourtCase> getCasesAssigned() {
-        return casesAssigned;
+    public List<CourtCase> getCases() {
+        return cases;
     }
 
-    public void setCasesAssigned(List<CourtCase> casesAssigned) {
-        this.casesAssigned = casesAssigned;
+    public void setCases(List<CourtCase> cases) {
+        this.cases = cases;
     }
 }

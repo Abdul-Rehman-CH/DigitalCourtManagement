@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.court.digitalcourtmanagement.entity.Judge;
 import com.court.digitalcourtmanagement.repository.JudgeRepository;
 
@@ -42,7 +43,7 @@ public class JudgeController {
 
         return judgeRepository.findById(id).map(j -> {
 
-            j.setJudgeName(updatedJudge.getJudgeName());
+            j.setName(updatedJudge.getName());
             return judgeRepository.save(j);
 
         }).orElse(null);

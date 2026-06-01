@@ -12,50 +12,54 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.court.digitalcourtmanagement.entity.CourtCase;
-import com.court.digitalcourtmanagement.repository.CaseRepository;
+import com.court.digitalcourtmanagement.service.CourtCaseService;
 
 @RestController
 @RequestMapping("/cases")
 public class CaseController {
 
-    private final CaseRepository caseRepository;
+    private final CourtCaseService courtCaseService;
 
-    public CaseController(CaseRepository caseRepository) {
-        this.caseRepository = caseRepository;
+    public CaseController(CourtCaseService courtCaseService) {
+        this.courtCaseService = courtCaseService;
     }
 
     @PostMapping
-    public CourtCase addCase(@RequestBody CourtCase c) {
-        return caseRepository.save(c);
+    public CourtCase CreateCase(@RequestBody CourtCase c) {
+        return courtCaseService.CreateCase(c);
     }
 
     @GetMapping
-    public List<CourtCase> getAllCases() {
-        return caseRepository.findAll();
+    public List<CourtCase> GetAllCases() {
+        return courtCaseService.GetAllCases();
     }
 
     @GetMapping("/{id}")
-    public CourtCase getCaseById(@PathVariable Long id) {
-        return caseRepository.findById(id).orElse(null);
+    public CourtCase GetCaseById(@PathVariable Long id) {
+        return courtCaseService.GetCaseById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCase(@PathVariable Long id) {
-        caseRepository.deleteById(id);
+    public void DeleteCase(@PathVariable Long id) {
+        courtCaseService.DeleteCase(id);
     }
 
     @PutMapping("/{id}")
-    public CourtCase updateCase(@PathVariable Long id, @RequestBody CourtCase updatedCase) {
+    public CourtCase UpdateCase(@PathVariable Long id,
+                                @RequestBody CourtCase updatedCase) {
 
-        return caseRepository.findById(id).map(c -> {
-
-            c.setTitle(updatedCase.getTitle());
-            c.setDescription(updatedCase.getDescription());
-            c.setStatus(updatedCase.getStatus());
-            c.setFilingDate(updatedCase.getFilingDate());
-
-            return caseRepository.save(c);
-
-        }).orElse(null);
+        return courtCaseService.UpdateCase(id, updatedCase);
     }
+
+    @PutMapping("/{caseId}/judge/{judgeId}")
+    public CourtCase AssignJudge(@PathVariable Long caseId,@PathVariable Long judgeId) {
+
+        return courtCaseService.AssignJudge(caseId, judgeId);
+    }
+
+@PutMapping("/{caseId}/lawyer/{lawyerId}/client/{clientId}")
+public CourtCase AssignLawyer(@PathVariable Long caseId,@PathVariable Long lawyerId,@PathVariable Long clientId) {
+
+    return courtCaseService.AssignLawyer(caseId, lawyerId, clientId);
+}
 }

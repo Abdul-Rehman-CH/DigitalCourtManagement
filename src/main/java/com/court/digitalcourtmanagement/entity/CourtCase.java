@@ -44,6 +44,12 @@ public class CourtCase{
     @ManyToOne
     @JsonBackReference(value = "client-case")
     private Client client;
+        public Client getClient(){
+        return this.client;
+    }
+    public void setClient(Client cl){
+        this.client=cl;
+    }
 
     public CourtCase() {
     }

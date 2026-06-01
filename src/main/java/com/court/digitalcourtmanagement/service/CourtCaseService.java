@@ -6,11 +6,13 @@ import com.court.digitalcourtmanagement.entity.CourtCase;
 
 public interface CourtCaseService {
 
-    CourtCase createCase(CourtCase courtCase);
+    CourtCase CreateCase(CourtCase newcase);
 
-    List<CourtCase> getAllCases();
+    List<CourtCase> GetAllCases();
 
-    CourtCase getCaseById(Long id);
-
-    CourtCase assignJudgeToCase(Long caseId, Long judgeId);
+    CourtCase GetCaseById(Long id);
+    CourtCase UpdateCase(Long id, CourtCase updatedCase);
+    void DeleteCase(Long id);
+    CourtCase AssignLawyer(Long caseId, Long lawyerId, Long clientId);
+    CourtCase AssignJudge(Long caseId, Long judgeId);
 }

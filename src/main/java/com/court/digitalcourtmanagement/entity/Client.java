@@ -4,7 +4,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Clients")
@@ -56,4 +59,5 @@ public class Client extends User {
     public void setCases(List<CourtCase> cases) {
         this.Cases = cases;
     }
+    
 }

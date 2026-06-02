@@ -1,111 +1,115 @@
 package com.court.digitalcourtmanagement.service;
 
-import java.util.List;
+import com.court.digitalcourtmanagement.dto.CourtCaseDTO;
+import com.court.digitalcourtmanagement.entity.*;
+import com.court.digitalcourtmanagement.Mapper.CourtCaseMapper;
+import com.court.digitalcourtmanagement.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.court.digitalcourtmanagement.entity.CourtCase;
-import com.court.digitalcourtmanagement.entity.Client;
-import com.court.digitalcourtmanagement.entity.Judge;
-import com.court.digitalcourtmanagement.entity.Lawyer;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import com.court.digitalcourtmanagement.repository.CaseRepository;
-import com.court.digitalcourtmanagement.repository.ClientRepository;
-import com.court.digitalcourtmanagement.repository.JudgeRepository;
-import com.court.digitalcourtmanagement.repository.LawyerRepository;
-
-import com.court.digitalcourtmanagement.service.CourtCaseService;
 @Service
-public class CourtCaseServiceImplementation implements CourtCaseService{
+public class CourtCaseServiceImplementation implements CourtCaseService {
+
     @Autowired
-    private CaseRepository caserepository;
+    private CaseRepository caseRepository;
+
     @Autowired
-    private ClientRepository clientrepository;
+    private ClientRepository clientRepository;
+
     @Autowired
-    private JudgeRepository judgerepository;
+    private JudgeRepository judgeRepository;
+
     @Autowired
-    private LawyerRepository lawyerrepository;
-
-@Override
-public CourtCase CreateCase(CourtCase c) {
-
-    if (c.getClient() == null || c.getClient().getId() == null) {
-        throw new RuntimeException("Client ID is required");
-    }
-
-    Client client = clientrepository.findById(c.getClient().getId())
-            .orElseThrow(() -> new RuntimeException("Client not found"));
-
-    c.setClient(client);
-    Judge judge = judgerepository.findAll()
-            .stream()
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("No judges available"));
-
-    c.setJudge(judge);
-
-    return caserepository.save(c);
-}
-    @Override
-    public CourtCase GetCaseById(Long id){
-        return caserepository.findById(id)
-        .orElseThrow(()-> new 
-        RuntimeException("Case not found"));
-    }
-    @Override
-    public List<CourtCase> GetAllCases(){
-        return caserepository.findAll();
-    }
+    private LawyerRepository lawyerRepository;
 
     @Override
-    public CourtCase UpdateCase(Long caseId, CourtCase updatedCase) {
+    public CourtCaseDTO CreateCase(CourtCaseDTO dto) {
 
-        CourtCase existing = caserepository.findById(caseId)
-                .orElseThrow(() -> new RuntimeException("Case not found"));
+        if (dto.getClientId() == null) {
+            throw new RuntimeException("Client ID required");
+        }
 
-        existing.setTitle(updatedCase.getTitle());
-        existing.setDescription(updatedCase.getDescription());
-        existing.setStatus(updatedCase.getStatus());
-        existing.setFilingDate(updatedCase.getFilingDate());
-
-        return caserepository.save(existing);
-    }
-    @Override
-    public void DeleteCase(Long caseId) {
-        caserepository.deleteById(caseId);
-    }
-    @Override
-    public CourtCase AssignLawyer(Long caseId, Long lawyerId, Long clientId) {
-
-        CourtCase courtCase = caserepository.findById(caseId)
-                .orElseThrow(() -> new RuntimeException("Case not found"));
-
-        Client client = clientrepository.findById(clientId)
+        Client client = clientRepository.findById(dto.getClientId())
                 .orElseThrow(() -> new RuntimeException("Client not found"));
 
-        Lawyer lawyer = lawyerrepository.findById(lawyerId)
-                .orElseThrow(() -> new RuntimeException("Lawyer not found"));
+        CourtCase c = new CourtCase();
+        c.setTitle(dto.getTitle());
+        c.setDescription(dto.getDescription());
+        c.setStatus(dto.getStatus());
+        c.setFilingDate(dto.getFilingDate());
+        c.setClient(client);
 
-        courtCase.setClient(client);
-
-        courtCase.setLawyer(lawyer);
-
-        return caserepository.save(courtCase);
+        return CourtCaseMapper.toDTO(caseRepository.save(c));
     }
-    @Override
-    public CourtCase AssignJudge(Long caseId, Long judgeId) {
 
-        CourtCase courtCase = caserepository.findById(caseId)
+    @Override
+    public List<CourtCaseDTO> GetAllCases() {
+        return caseRepository.findAll()
+                .stream()
+                .map(CourtCaseMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CourtCaseDTO GetCaseById(Long id) {
+        return CourtCaseMapper.toDTO(
+                caseRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Case not found"))
+        );
+    }
+
+    @Override
+    public CourtCaseDTO UpdateCase(Long id, CourtCaseDTO dto) {
+
+        CourtCase existing = caseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Case not found"));
 
-        Judge judge = judgerepository.findById(judgeId)
+        existing.setTitle(dto.getTitle());
+        existing.setDescription(dto.getDescription());
+        existing.setStatus(dto.getStatus());
+        existing.setFilingDate(dto.getFilingDate());
+
+        return CourtCaseMapper.toDTO(caseRepository.save(existing));
+    }
+
+    @Override
+    public void DeleteCase(Long id) {
+        caseRepository.deleteById(id);
+    }
+
+    @Override
+    public CourtCaseDTO AssignLawyer(Long caseId, Long lawyerId, Long clientId) {
+
+        CourtCase c = caseRepository.findById(caseId)
+                .orElseThrow(() -> new RuntimeException("Case not found"));
+
+        Lawyer l = lawyerRepository.findById(lawyerId)
+                .orElseThrow(() -> new RuntimeException("Lawyer not found"));
+
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        c.setLawyer(l);
+        c.setClient(client);
+
+        return CourtCaseMapper.toDTO(caseRepository.save(c));
+    }
+
+    @Override
+    public CourtCaseDTO AssignJudge(Long caseId, Long judgeId) {
+
+        CourtCase c = caseRepository.findById(caseId)
+                .orElseThrow(() -> new RuntimeException("Case not found"));
+
+        Judge j = judgeRepository.findById(judgeId)
                 .orElseThrow(() -> new RuntimeException("Judge not found"));
 
-        courtCase.setJudge(judge);
+        c.setJudge(j);
 
-        return caserepository.save(courtCase);
+        return CourtCaseMapper.toDTO(caseRepository.save(c));
     }
-    
-
 }

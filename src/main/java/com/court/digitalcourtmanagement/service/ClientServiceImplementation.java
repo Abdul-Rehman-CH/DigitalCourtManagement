@@ -1,49 +1,66 @@
 package com.court.digitalcourtmanagement.service;
 
-import java.util.List;
+import com.court.digitalcourtmanagement.dto.ClientDTO;
+import com.court.digitalcourtmanagement.entity.Client;
+import com.court.digitalcourtmanagement.Mapper.ClientMapper;
+import com.court.digitalcourtmanagement.repository.ClientRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.court.digitalcourtmanagement.entity.Client;
-import com.court.digitalcourtmanagement.repository.ClientRepository;
-import com.court.digitalcourtmanagement.repository.CaseRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientServiceImplementation implements ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
-    @Autowired
-    private CaseRepository caseRepository;
 
     @Override
-    public Client CreateClient(Client cl) {
-        return clientRepository.save(cl);
+    public ClientDTO CreateClient(ClientDTO dto) {
+
+        Client c = new Client();
+
+        c.setName(dto.getName());
+        c.setEmail(dto.getEmail());
+        c.setContactNo(dto.getContactNo());
+        c.setCnicNumber(dto.getCnicNumber());
+
+        return ClientMapper.toDTO(clientRepository.save(c));
     }
 
     @Override
-    public Client GetClientById(long cid) {
-        return clientRepository.findById(cid)
+    public ClientDTO GetClientById(long cid) {
+
+        Client c = clientRepository.findById(cid)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        return ClientMapper.toDTO(c);
     }
 
     @Override
-    public List<Client> GetAllClients() {
-        return clientRepository.findAll();
+    public List<ClientDTO> GetAllClients() {
+
+        return clientRepository.findAll()
+                .stream()
+                .map(ClientMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Client UpdateClient(long cid, Client cl) {
-        Client existing = GetClientById(cid);
+    public ClientDTO UpdateClient(long cid, ClientDTO dto) {
 
-        existing.setName(cl.getName());
-        existing.setEmail(cl.getEmail());
-        existing.setContactNo(cl.getContactNo());
-        existing.setStatus(cl.getStatus());
+        Client c = clientRepository.findById(cid)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
 
-        return clientRepository.save(existing);
+        c.setName(dto.getName());
+        c.setEmail(dto.getEmail());
+        c.setContactNo(dto.getContactNo());
+        c.setCnicNumber(dto.getCnicNumber());
+
+        return ClientMapper.toDTO(clientRepository.save(c));
     }
 
     @Override
@@ -53,29 +70,37 @@ public class ClientServiceImplementation implements ClientService {
 
     @Override
     public void UploadCNICFront(long id, MultipartFile file) {
-        Client client = GetClientById(id);
-
+        Client c = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
         try {
-            client.setCnicFrontImage(file.getBytes());
-            clientRepository.save(client);
+            c.setCnicFrontImage(file.getBytes());
+            clientRepository.save(c);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to upload CNIC front");
+            throw new RuntimeException(e.getMessage());
         }
     }
 
     @Override
     public void UploadCNICBack(long id, MultipartFile file) {
-        Client client = GetClientById(id);
-
+        Client c = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
         try {
-            client.setCnicBackImage(file.getBytes());
-            clientRepository.save(client);
+            c.setCnicBackImage(file.getBytes());
+            clientRepository.save(c);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to upload CNIC back");
+            throw new RuntimeException(e.getMessage());
         }
     }
+
     @Override
     public List<?> GetClientCases(Long id) {
-    return caseRepository.findByClient_Id(id);
-}
+
+        Client c = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        return c.getCases()
+                .stream()
+                .map(com.court.digitalcourtmanagement.Mapper.CourtCaseMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }

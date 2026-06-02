@@ -1,51 +1,45 @@
 package com.court.digitalcourtmanagement.Controller;
+
+import com.court.digitalcourtmanagement.dto.JudgeDTO;
+import com.court.digitalcourtmanagement.service.JudgeService;
+
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.court.digitalcourtmanagement.entity.Judge;
-import com.court.digitalcourtmanagement.repository.JudgeRepository;
 
 @RestController
 @RequestMapping("/judges")
 public class JudgeController {
-    private final JudgeRepository judgeRepository;
-    public JudgeController(JudgeRepository judgeRepository){
-        this.judgeRepository=judgeRepository;
+
+    private final JudgeService judgeService;
+
+    public JudgeController(JudgeService judgeService) {
+        this.judgeService = judgeService;
     }
+
     @PostMapping
-    public Judge addJudge(@RequestBody Judge j ){
-        return judgeRepository.save(j);
+    public JudgeDTO addJudge(@RequestBody JudgeDTO dto) {
+        return judgeService.CreateJudge(dto);
     }
-        @GetMapping
-    public List<Judge> getAllJudges() {
-        return judgeRepository.findAll();
+
+    @GetMapping
+    public List<JudgeDTO> getAllJudges() {
+        return judgeService.GetAllJudges();
     }
 
     @GetMapping("/{id}")
-    public Judge getJudgeById(@PathVariable Long id) {
-        return judgeRepository.findById(id).orElse(null);
+    public JudgeDTO getJudgeById(@PathVariable Long id) {
+        return judgeService.GetJudgeById(id);
+    }
+
+    @PutMapping("/{id}")
+    public JudgeDTO updateJudge(@PathVariable Long id,
+                               @RequestBody JudgeDTO dto) {
+        return judgeService.UpdateJudge(id, dto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteJudge(@PathVariable Long id) {
-        judgeRepository.deleteById(id);
-    }
-    @PutMapping("/{id}")
-    public Judge updateJudge(@PathVariable Long id, @RequestBody Judge updatedJudge) {
-
-        return judgeRepository.findById(id).map(j -> {
-
-            j.setName(updatedJudge.getName());
-            return judgeRepository.save(j);
-
-        }).orElse(null);
+        judgeService.DeleteJudge(id);
     }
 }

@@ -1,14 +1,18 @@
 package com.court.digitalcourtmanagement.service;
+
+import com.court.digitalcourtmanagement.dto.JudgeDTO;
+
 import java.util.List;
 
-import com.court.digitalcourtmanagement.entity.Judge;
 public interface JudgeService {
-    Judge CreateJudge(Judge j);
-    Judge GetJudgeById(long jid);
-    List<Judge> GetAllJudges();
 
-    Judge UpdateJudge(long jid, Judge judge);
-    void DeleteJudge(long jid);
+    JudgeDTO CreateJudge(JudgeDTO judgeDTO);
 
-    List<?> GetAssignedCases(Long judgeId);
+    JudgeDTO GetJudgeById(Long id);
+
+    List<JudgeDTO> GetAllJudges();
+
+    JudgeDTO UpdateJudge(Long id, JudgeDTO judgeDTO);
+
+    void DeleteJudge(Long id);
 }

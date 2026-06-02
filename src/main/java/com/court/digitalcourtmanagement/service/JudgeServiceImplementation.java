@@ -1,13 +1,16 @@
 package com.court.digitalcourtmanagement.service;
 
-import java.util.List;
+import com.court.digitalcourtmanagement.dto.JudgeDTO;
+import com.court.digitalcourtmanagement.entity.Judge;
+import com.court.digitalcourtmanagement.entity.Status;
+import com.court.digitalcourtmanagement.Mapper.JudgeMapper;
+import com.court.digitalcourtmanagement.repository.JudgeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.court.digitalcourtmanagement.entity.Judge;
-import com.court.digitalcourtmanagement.repository.CaseRepository;
-import com.court.digitalcourtmanagement.repository.JudgeRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class JudgeServiceImplementation implements JudgeService {
@@ -15,51 +18,59 @@ public class JudgeServiceImplementation implements JudgeService {
     @Autowired
     private JudgeRepository judgeRepository;
 
-    @Autowired
-    private CaseRepository caseRepository;
-
-
     @Override
-    public Judge CreateJudge(Judge j) {
-        return judgeRepository.save(j);
+    public JudgeDTO CreateJudge(JudgeDTO dto) {
+
+        Judge j = new Judge();
+
+        j.setName(dto.getName());
+        j.setEmail(dto.getEmail());
+        j.setContactNo(dto.getContactNo());
+
+        if (dto.getStatus() != null) {
+            j.setStatus(Status.valueOf(dto.getStatus()));
+        }
+
+        return JudgeMapper.toDTO(judgeRepository.save(j));
     }
 
     @Override
-    public Judge GetJudgeById(long jid) {
-        return judgeRepository.findById(jid)
+    public JudgeDTO GetJudgeById(Long id) {
+
+        Judge j = judgeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Judge not found"));
+
+        return JudgeMapper.toDTO(j);
     }
 
     @Override
-    public List<Judge> GetAllJudges() {
-        return judgeRepository.findAll();
-    }
+    public List<JudgeDTO> GetAllJudges() {
 
-    @Override
-    public Judge UpdateJudge(long jid, Judge judge) {
-        Judge existing = GetJudgeById(jid);
-
-        existing.setName(judge.getName());
-        existing.setEmail(judge.getEmail());
-        existing.setContactNo(judge.getContactNo());
-        existing.setStatus(judge.getStatus());
-
-        return judgeRepository.save(existing);
-    }
-
-    @Override
-    public void DeleteJudge(long jid) {
-        judgeRepository.deleteById(jid);
-    }
-
-    @Override
-    public List<?> GetAssignedCases(Long judgeId) {
-        Judge judge = GetJudgeById(judgeId);
-
-        return caseRepository.findAll()
+        return judgeRepository.findAll()
                 .stream()
-                .filter(c -> c.getJudge() != null
-                        && c.getJudge().getId().equals(judge.getId()))
-                .toList();
+                .map(JudgeMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public JudgeDTO UpdateJudge(Long id, JudgeDTO dto) {
+
+        Judge existing = judgeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Judge not found"));
+
+        existing.setName(dto.getName());
+        existing.setEmail(dto.getEmail());
+        existing.setContactNo(dto.getContactNo());
+
+        if (dto.getStatus() != null) {
+            existing.setStatus(Status.valueOf(dto.getStatus()));
+        }
+
+        return JudgeMapper.toDTO(judgeRepository.save(existing));
+    }
+
+    @Override
+    public void DeleteJudge(Long id) {
+        judgeRepository.deleteById(id);
     }
 }

@@ -1,25 +1,25 @@
 package com.court.digitalcourtmanagement.service;
 
-import java.util.List;
-
+import com.court.digitalcourtmanagement.dto.ClientDTO;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.court.digitalcourtmanagement.entity.Client;
+import java.util.List;
 
 public interface ClientService {
 
-    Client CreateClient(Client cl);
+    ClientDTO CreateClient(ClientDTO cl);
 
-    Client GetClientById(long cid);
+    ClientDTO GetClientById(long cid);
 
-    List<Client> GetAllClients();
+    List<ClientDTO> GetAllClients();
 
-    Client UpdateClient(long cid, Client cl);
+    ClientDTO UpdateClient(long cid, ClientDTO cl);
 
     void DeleteClient(long cid);
 
     void UploadCNICFront(long id, MultipartFile file);
 
     void UploadCNICBack(long id, MultipartFile file);
+
     List<?> GetClientCases(Long id);
 }

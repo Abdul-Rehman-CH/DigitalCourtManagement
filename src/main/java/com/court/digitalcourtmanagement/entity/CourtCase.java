@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -24,11 +25,14 @@ public class CourtCase {
     private LocalDate filingDate;
 
     @ManyToOne
+    @JsonIgnoreProperties({"cases"})
     private Judge judgeAssigned;
 
     @ManyToOne
+    @JsonIgnoreProperties({"cases"})
     private Lawyer lawyerAssigned;
     @ManyToOne
+    @JsonIgnoreProperties({"cases", "cnicFrontImage", "cnicBackImage"})
     private Client client;
 
     public Long getCaseId() {

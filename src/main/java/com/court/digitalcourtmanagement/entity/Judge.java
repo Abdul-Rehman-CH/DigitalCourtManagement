@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
@@ -20,6 +21,7 @@ public class Judge extends User {
     private String courtRoom;
 
     @OneToMany(mappedBy = "judgeAssigned")
+    @JsonIgnoreProperties({"judgeAssigned", "lawyerAssigned", "client"})
     private List<CourtCase> cases = new ArrayList<>();
 
     public String getJudgeName() {

@@ -248,6 +248,16 @@ tbody tr:hover td{background:#FAFAF8}
 .badge-ADJOURNED{background:#FFF0D6;color:#9C5B00}
 .badge-CLOSED{background:#F5F5F5;color:#555}
 .badge-DISMISSED{background:var(--danger-lt);color:var(--danger)}
+.badge-PENDING_APPROVAL{background:#FFF0D6;color:#9C5B00}
+.badge-APPROVED{background:var(--success-lt);color:var(--success)}
+.badge-REJECTED{background:var(--danger-lt);color:var(--danger)}
+.cnic-upload-zone{border:2px dashed var(--border);border-radius:8px;padding:18px 14px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;position:relative}
+.cnic-upload-zone:hover,.cnic-upload-zone.drag-over{border-color:var(--gold);background:rgba(200,168,75,.04)}
+.cnic-upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.cnic-preview{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#FAFAF8;border:1px solid var(--border);border-radius:7px;font-size:13px}
+.approval-card{padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);border-left:4px solid var(--warning);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.approval-card.approved{border-left-color:var(--success)}
+.approval-card.rejected{border-left-color:var(--danger)}
 
 /* ═══════════════════════════════════════════
    MODAL
@@ -488,9 +498,52 @@ tbody tr:hover td{background:#FAFAF8}
             <input class="form-input" id="reg-email" type="email" placeholder="you@example.com"/>
           </div>
         </div>
+        <!-- Judge/Lawyer profile fields -->
+        <div id="reg-judge-fields" style="display:none;border-top:1px solid var(--border);padding-top:14px;margin-bottom:16px">
+          <div style="font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:10px">Judge Profile</div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" for="reg-j-name">Full Name *</label>
+            <input class="form-input" id="reg-j-name" type="text" placeholder="Hon. Justice Full Name"/>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" for="reg-j-email">Official Email *</label>
+            <input class="form-input" id="reg-j-email" type="email" placeholder="judge@court.gov.pk"/>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" for="reg-j-contact">Contact No</label>
+            <input class="form-input" id="reg-j-contact" type="text" placeholder="+92 300 0000000"/>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="reg-j-room">Court Room</label>
+            <input class="form-input" id="reg-j-room" type="text" placeholder="Room A-1"/>
+          </div>
+        </div>
+        <div id="reg-lawyer-fields" style="display:none;border-top:1px solid var(--border);padding-top:14px;margin-bottom:16px">
+          <div style="font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:10px">Lawyer Profile</div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" for="reg-l-name">Full Name *</label>
+            <input class="form-input" id="reg-l-name" type="text" placeholder="Advocate Full Name"/>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" for="reg-l-email">Official Email *</label>
+            <input class="form-input" id="reg-l-email" type="email" placeholder="lawyer@firm.com"/>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" for="reg-l-contact">Contact No</label>
+            <input class="form-input" id="reg-l-contact" type="text" placeholder="+92 300 0000000"/>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" for="reg-l-bar">Bar Registration No. *</label>
+            <input class="form-input" id="reg-l-bar" type="text" placeholder="BAR-00123"/>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="reg-l-spec">Specialization</label>
+            <input class="form-input" id="reg-l-spec" type="text" placeholder="Criminal Law, Civil Law…"/>
+          </div>
+        </div>
         <div id="reg-approval-note" style="display:none;padding:12px 14px;background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.25);border-radius:8px;margin-bottom:16px">
           <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">⏳ Admin approval required</div>
-          <div style="font-size:12.5px;color:var(--muted);line-height:1.6">Your account will be created, but an admin must link it to your judge/lawyer profile before you can access your dashboard.</div>
+          <div style="font-size:12.5px;color:var(--muted);line-height:1.6">Your registration will be reviewed by the court admin. You'll be able to sign in once approved. Please fill in your profile details above accurately.</div>
         </div>
         <button class="btn btn-gold btn-full" id="reg-btn" onclick="doRegister()">Create Account →</button>
       </div>
@@ -736,13 +789,13 @@ function initApp() {
 //  NAV
 // ════════════════════════════════════════════════════════════════════════
 const NAV = {
-  ADMIN:  [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'judges', icon:'👨‍⚖️', label:'Judges' }, { id:'lawyers', icon:'📋', label:'Lawyers' }, { id:'clients', icon:'👤', label:'Clients' }, { id:'cases', icon:'⚖️', label:'All Cases' }, { id:'accounts', icon:'🔑', label:'Accounts' }],
+  ADMIN:  [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'judges', icon:'👨‍⚖️', label:'Judges' }, { id:'lawyers', icon:'📋', label:'Lawyers' }, { id:'clients', icon:'👤', label:'Clients' }, { id:'cases', icon:'⚖️', label:'All Cases' }, { id:'approvals', icon:'✅', label:'Approvals' }, { id:'accounts', icon:'🔑', label:'Accounts' }],
   JUDGE:  [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'my-cases', icon:'⚖️', label:'My Cases' }, { id:'lawyers', icon:'📋', label:'Lawyers' }, { id:'clients', icon:'👤', label:'Clients' }],
   LAWYER: [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'my-cases', icon:'⚖️', label:'My Cases' }, { id:'clients', icon:'👤', label:'My Clients' }, { id:'all-cases', icon:'📁', label:'All Cases' }],
   CLIENT: [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'my-cases', icon:'⚖️', label:'My Cases' }],
 };
 
-const PAGE_TITLES = { dashboard:'Dashboard', judges:'Judges', lawyers:'Lawyers', clients:'Clients', cases:'Cases', 'my-cases':'My Cases', 'all-cases':'All Cases', accounts:'Login Accounts' };
+const PAGE_TITLES = { dashboard:'Dashboard', judges:'Judges', lawyers:'Lawyers', clients:'Clients', cases:'Cases', 'my-cases':'My Cases', 'all-cases':'All Cases', accounts:'Login Accounts', approvals:'Pending Approvals' };
 
 function buildNav() {
   const items = NAV[state.role] || NAV.CLIENT;
@@ -785,6 +838,7 @@ function renderPage(page) {
       else renderCases(`/api/cases/by-client/${state.domainId}`, 'My Cases', true, true, false);
       break;
     case 'accounts':  renderAccounts(); break;
+    case 'approvals': renderApprovals(); break;
   }
 }
 
@@ -896,6 +950,10 @@ async function renderAdminDashboard() {
             <button class="quick-action" onclick="navigate('cases')">
               <span class="qa-icon">⚖️</span>
               <div><span class="qa-title">View All Cases</span><span class="qa-desc">Browse and file court cases</span></div>
+            </button>
+            <button class="quick-action" onclick="navigate('approvals')">
+              <span class="qa-icon">✅</span>
+              <div><span class="qa-title">Review Approvals</span><span class="qa-desc">Approve or reject pending judge/lawyer registrations</span></div>
             </button>
           </div>
         </div>
@@ -1370,7 +1428,30 @@ function openCaseForm(id) {
   const isClient = state.role === 'CLIENT';
   const isNew    = !c;
 
+  // Always fetch fresh — avoids stale/empty cache from earlier failed loads
   document.getElementById('modal-title').textContent = c ? 'Edit Case' : 'File New Case';
+  document.getElementById('modal-body').innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div>';
+  document.getElementById('modal-save-btn').disabled = true;
+  openModal('form-modal');
+
+  Promise.allSettled([
+    api('GET', '/api/judges'),
+    api('GET', '/api/lawyers'),
+    api('GET', '/api/clients'),
+  ]).then(results => {
+    const [judgesR, lawyersR, clientsR] = results;
+    if (judgesR.status  === 'fulfilled') casesJudges  = judgesR.value  || [];
+    if (lawyersR.status === 'fulfilled') casesLawyers = lawyersR.value || [];
+    if (clientsR.status === 'fulfilled') casesClients = clientsR.value || [];
+    document.getElementById('modal-save-btn').disabled = false;
+    _buildCaseFormBody(c, isClient, isNew);
+  }).catch(err => {
+    document.getElementById('modal-body').innerHTML = '<div style="color:var(--danger);padding:20px">Failed to load dropdown data: ' + err.message + '</div>';
+    document.getElementById('modal-save-btn').disabled = false;
+  });
+}
+
+function _buildCaseFormBody(c, isClient, isNew) {
 
   // Judge row: on new cases show "will be auto-assigned"; on existing show who was assigned (read-only)
   const judgeRow = isNew
@@ -1409,6 +1490,18 @@ function openCaseForm(id) {
         <label class="form-label">Lawyer <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">(chosen by client)</span></label>
         <select class="form-select" id="f-lawyer">${entityOpts(casesLawyers,'Select lawyer — optional')}</select>
       </div>
+      <div class="form-group col-full">
+        <label class="form-label">CNIC Document <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">(client identity — image or PDF)</span></label>
+        <div class="cnic-upload-zone" id="cnic-drop-zone" onclick="document.getElementById('f-cnic-file').click()">
+          <input type="file" id="f-cnic-file" accept="image/*,.pdf" style="display:none" onchange="handleCnicUpload(this)"/>
+          <div id="cnic-upload-placeholder">
+            <div style="font-size:24px;margin-bottom:6px">🪪</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Upload CNIC</div>
+            <div style="font-size:11.5px;color:var(--muted)">Click to browse · JPG, PNG or PDF · Max 5 MB</div>
+          </div>
+        </div>
+        <div id="cnic-preview-wrap" style="display:none;margin-top:8px"></div>
+      </div>
     </div>`;
 
   if (c) {
@@ -1435,7 +1528,8 @@ function openCaseForm(id) {
     closeModal('form-modal');
     reloadCases();
   };
-  openModal('form-modal');
+  // Open modal if not already open (lazy-load path already opened it)
+  if (!document.getElementById('form-modal').classList.contains('open')) openModal('form-modal');
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -1593,6 +1687,8 @@ function showTab(tab) {
 function onRegRoleChange() {
   const role = document.getElementById('reg-role').value;
   document.getElementById('reg-client-fields').style.display  = role === 'CLIENT' ? 'block' : 'none';
+  document.getElementById('reg-judge-fields').style.display   = role === 'JUDGE'  ? 'block' : 'none';
+  document.getElementById('reg-lawyer-fields').style.display  = role === 'LAWYER' ? 'block' : 'none';
   document.getElementById('reg-approval-note').style.display  = (role === 'JUDGE' || role === 'LAWYER') ? 'block' : 'none';
 }
 
@@ -1621,14 +1717,51 @@ async function doRegister() {
     body.cnicNumber = (document.getElementById('reg-cnic')?.value||'').trim() || null;
     body.contactNo  = (document.getElementById('reg-contact')?.value||'').trim() || null;
     body.email      = (document.getElementById('reg-email')?.value||'').trim() || null;
+  } else if (role === 'JUDGE') {
+    const fullName = (document.getElementById('reg-j-name')?.value||'').trim();
+    const email    = (document.getElementById('reg-j-email')?.value||'').trim();
+    if (!fullName) { errEl.textContent = 'Full name is required.'; errEl.style.display = 'block'; return; }
+    if (!email)    { errEl.textContent = 'Official email is required.'; errEl.style.display = 'block'; return; }
+    body.fullName  = fullName;
+    body.email     = email;
+    body.contactNo = (document.getElementById('reg-j-contact')?.value||'').trim() || null;
+    body.courtRoom = (document.getElementById('reg-j-room')?.value||'').trim() || null;
+    body.approvalStatus = 'PENDING_APPROVAL';
+  } else if (role === 'LAWYER') {
+    const fullName = (document.getElementById('reg-l-name')?.value||'').trim();
+    const email    = (document.getElementById('reg-l-email')?.value||'').trim();
+    const barNo    = (document.getElementById('reg-l-bar')?.value||'').trim();
+    if (!fullName) { errEl.textContent = 'Full name is required.'; errEl.style.display = 'block'; return; }
+    if (!email)    { errEl.textContent = 'Official email is required.'; errEl.style.display = 'block'; return; }
+    if (!barNo)    { errEl.textContent = 'Bar Registration No. is required.'; errEl.style.display = 'block'; return; }
+    body.fullName       = fullName;
+    body.email          = email;
+    body.contactNo      = (document.getElementById('reg-l-contact')?.value||'').trim() || null;
+    body.barNumber      = barNo;
+    body.specialization = (document.getElementById('reg-l-spec')?.value||'').trim() || null;
+    body.approvalStatus = 'PENDING_APPROVAL';
   }
 
   btn.textContent = 'Registering…'; btn.disabled = true;
   try {
-    const msg = await api('POST', '/api/auth/register', body);
-    okEl.textContent = (typeof msg === 'string' ? msg : 'Account created!') + (role === 'CLIENT' ? ' You can now sign in.' : '');
-    okEl.style.display = 'block';
-    ['reg-user','reg-pass','reg-pass2','reg-name','reg-cnic','reg-contact','reg-email'].forEach(id => {
+    // For JUDGE/LAWYER: store in local pending queue for admin approval
+    if (role === 'JUDGE' || role === 'LAWYER') {
+      if (!window._pendingRegistrations) window._pendingRegistrations = [];
+      const existing = window._pendingRegistrations.find(r => r.username === username);
+      if (existing) throw new Error('Username already taken.');
+      window._pendingRegistrations.push({ ...body, _id: 'reg_' + Date.now(), _pw: password, _ts: Date.now() });
+      const isApproval = true;
+      okEl.textContent = '✅ Registration submitted! Your account is pending admin approval. You will be able to sign in once approved.';
+      okEl.style.display = 'block';
+    } else {
+      const msg = await api('POST', '/api/auth/register', body);
+      okEl.textContent = (typeof msg === 'string' ? msg : 'Account created!') + ' You can now sign in.';
+      okEl.style.display = 'block';
+    }
+    // Clear all fields
+    ['reg-user','reg-pass','reg-pass2','reg-name','reg-cnic','reg-contact','reg-email',
+     'reg-j-name','reg-j-email','reg-j-contact','reg-j-room',
+     'reg-l-name','reg-l-email','reg-l-contact','reg-l-bar','reg-l-spec'].forEach(id => {
       const el = document.getElementById(id); if(el) el.value='';
     });
     document.getElementById('reg-role').value = '';
@@ -1640,6 +1773,174 @@ async function doRegister() {
   } finally {
     btn.textContent = 'Create Account →'; btn.disabled = false;
   }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  CNIC UPLOAD HELPER
+// ════════════════════════════════════════════════════════════════════════
+function handleCnicUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { toast('File too large — maximum 5 MB', 'error'); input.value = ''; return; }
+  const wrap  = document.getElementById('cnic-preview-wrap');
+  const ph    = document.getElementById('cnic-upload-placeholder');
+  const zone  = document.getElementById('cnic-drop-zone');
+  if (!wrap) return;
+  const isImg = file.type.startsWith('image/');
+  const url   = URL.createObjectURL(file);
+  wrap.style.display = 'block';
+  zone.style.borderColor = 'var(--gold)';
+  ph.innerHTML = `<div style="font-size:12px;color:var(--success);font-weight:600">✓ ${file.name}</div><div style="font-size:11px;color:var(--muted)">Click to change</div>`;
+  if (isImg) {
+    wrap.innerHTML = `<div class="cnic-preview"><img src="${url}" alt="CNIC" style="height:60px;border-radius:5px;object-fit:cover;border:1px solid var(--border)"/><div><div style="font-weight:600;font-size:12.5px;color:var(--text)">${file.name}</div><div style="font-size:11px;color:var(--muted)">${(file.size/1024).toFixed(0)} KB · ${file.type}</div></div><button type="button" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--danger);font-size:16px" onclick="clearCnicUpload()">✕</button></div>`;
+  } else {
+    wrap.innerHTML = `<div class="cnic-preview"><span style="font-size:24px">📄</span><div><div style="font-weight:600;font-size:12.5px;color:var(--text)">${file.name}</div><div style="font-size:11px;color:var(--muted)">${(file.size/1024).toFixed(0)} KB · PDF</div></div><button type="button" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--danger);font-size:16px" onclick="clearCnicUpload()">✕</button></div>`;
+  }
+}
+
+function clearCnicUpload() {
+  const input = document.getElementById('f-cnic-file');
+  if (input) input.value = '';
+  const wrap = document.getElementById('cnic-preview-wrap');
+  if (wrap) { wrap.style.display = 'none'; wrap.innerHTML = ''; }
+  const ph = document.getElementById('cnic-upload-placeholder');
+  if (ph) ph.innerHTML = `<div style="font-size:24px;margin-bottom:6px">🪪</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Upload CNIC</div><div style="font-size:11.5px;color:var(--muted)">Click to browse · JPG, PNG or PDF · Max 5 MB</div>`;
+  const zone = document.getElementById('cnic-drop-zone');
+  if (zone) zone.style.borderColor = '';
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  APPROVALS SECTION (Admin only)
+// ════════════════════════════════════════════════════════════════════════
+
+// In-memory pending registrations store (simulates a backend queue)
+// In a real app this would come from /api/auth/pending-registrations
+if (!window._pendingRegistrations) window._pendingRegistrations = [];
+
+async function renderApprovals() {
+  const el = document.getElementById('main-content');
+  const pending = window._pendingRegistrations;
+
+  const pendingList  = pending.filter(r => r.approvalStatus === 'PENDING_APPROVAL');
+  const reviewedList = pending.filter(r => r.approvalStatus !== 'PENDING_APPROVAL');
+
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">Pending Approvals</h2>
+      <span style="font-size:12px;color:var(--muted);padding:4px 12px;background:rgba(200,168,75,.1);border-radius:99px;font-weight:600">${pendingList.length} awaiting review</span>
+    </div>
+
+    ${pendingList.length === 0 ? `
+      <div class="card"><div style="text-align:center;padding:70px;color:var(--muted)">
+        <div style="font-size:40px;margin-bottom:12px">✅</div>
+        <div style="font-size:16px;font-weight:600;margin-bottom:6px">All caught up!</div>
+        <div style="font-size:13px">No pending registrations to review.</div>
+      </div></div>` : `
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-header">
+          <span class="card-title">⏳ Awaiting Review</span>
+          <span style="font-size:12px;color:var(--muted)">${pendingList.length} registration${pendingList.length!==1?'s':''}</span>
+        </div>
+        <div class="card-body" style="padding:0">
+          ${pendingList.map((r,i) => `
+            <div class="approval-card" id="acard-${r._id}">
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                  <span style="font-size:15px">${r.role==='JUDGE'?'👨‍⚖️':'📋'}</span>
+                  <span style="font-weight:700;font-size:14px;color:var(--text)">${r.fullName||r.username}</span>
+                  ${badge(r.role)}
+                </div>
+                <div style="font-size:12px;color:var(--muted);line-height:1.7">
+                  <span>🔑 Username: <strong>${r.username}</strong></span>
+                  ${r.email ? ` · 📧 ${r.email}` : ''}
+                  ${r.contactNo ? ` · 📞 ${r.contactNo}` : ''}
+                  ${r.courtRoom ? ` · 🏛️ ${r.courtRoom}` : ''}
+                  ${r.barNumber ? ` · BAR: <span class="code-badge">${r.barNumber}</span>` : ''}
+                  ${r.specialization ? ` · ${r.specialization}` : ''}
+                  <br><span style="color:var(--muted);font-size:11px">Registered: ${new Date(r._ts).toLocaleString('en-PK')}</span>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;flex-shrink:0">
+                <button class="btn btn-sm btn-success" onclick="approveRegistration('${r._id}')">✓ Approve</button>
+                <button class="btn btn-sm btn-danger" onclick="rejectRegistration('${r._id}')">✕ Reject</button>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`}
+
+    ${reviewedList.length > 0 ? `
+      <div class="card">
+        <div class="card-header"><span class="card-title">Review History</span></div>
+        <div class="card-body" style="padding:0">
+          ${reviewedList.map(r => `
+            <div class="approval-card ${r.approvalStatus==='APPROVED'?'approved':'rejected'}" style="opacity:.75">
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+                  <span>${r.role==='JUDGE'?'👨‍⚖️':'📋'}</span>
+                  <span style="font-weight:600;font-size:13px;color:var(--text)">${r.fullName||r.username}</span>
+                  ${badge(r.role)}
+                  ${badge(r.approvalStatus)}
+                </div>
+                <div style="font-size:12px;color:var(--muted)">🔑 ${r.username} ${r.email?'· '+r.email:''}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>` : ''}`;
+}
+
+async function approveRegistration(id) {
+  const reg = window._pendingRegistrations.find(r => r._id === id);
+  if (!reg) return;
+
+  const btn = document.querySelector(`button[onclick="approveRegistration('${id}')"]`);
+  if (btn) { btn.textContent = 'Approving…'; btn.disabled = true; }
+
+  try {
+    // Step 1: Create the domain profile record first to get the profileId
+    let profileId = null;
+    if (reg.role === 'JUDGE') {
+      const profile = await api('POST', '/api/judges', {
+        name: reg.fullName, email: reg.email,
+        contactNo: reg.contactNo, courtRoom: reg.courtRoom, status: 'ACTIVE'
+      });
+      profileId = profile?.id ?? profile?.judgeId ?? null;
+    } else if (reg.role === 'LAWYER') {
+      const profile = await api('POST', '/api/lawyers', {
+        name: reg.fullName, email: reg.email, contactNo: reg.contactNo,
+        barNumber: reg.barNumber, specialization: reg.specialization, status: 'ACTIVE'
+      });
+      profileId = profile?.id ?? profile?.lawyerId ?? null;
+    }
+
+    // Step 2: Register the auth account WITH the domainEntityId linked
+    await api('POST', '/api/auth/register', {
+      username: reg.username,
+      password: reg._pw,
+      role: reg.role,
+      domainEntityId: profileId   // ← this is the critical link
+    });
+
+    reg.approvalStatus = 'APPROVED';
+    reg._profileId = profileId;
+    toast(`✅ ${reg.fullName||reg.username} approved — account linked to profile #${profileId}`);
+  } catch(e) {
+    console.error('[Approve] Error:', e);
+    // Profile may have been created but account registration failed — show specific error
+    toast(`Approval failed: ${e.message}`, 'error');
+    if (btn) { btn.textContent = '✓ Approve'; btn.disabled = false; }
+    return;
+  }
+  renderApprovals();
+}
+
+function rejectRegistration(id) {
+  const reg = window._pendingRegistrations.find(r => r._id === id);
+  if (!reg) return;
+  const reason = prompt(`Reason for rejecting ${reg.fullName||reg.username} (optional):`);
+  reg.approvalStatus = 'REJECTED';
+  reg.rejectReason = reason;
+  toast(`Registration for ${reg.fullName||reg.username} rejected`, 'error');
+  renderApprovals();
 }
 
 // ════════════════════════════════════════════════════════════════════════

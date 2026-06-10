@@ -1,17 +1,20 @@
 package com.court.digitalcourtmanagement.entity;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @MappedSuperclass
-public class User {
+public abstract class BaseUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(unique = true)
     private String email;
+
     private String contactNo;
 
     @Enumerated(EnumType.STRING)

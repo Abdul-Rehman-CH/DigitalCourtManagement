@@ -1,25 +1,21 @@
 package com.court.digitalcourtmanagement.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "lawyers")
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class,
-  property = "id"
-)
-public class Lawyer extends User {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Lawyer extends BaseUser {
 
-    private String barNumber,specialization;
+    private String barNumber;
+    private String specialization;
 
-    @OneToMany(mappedBy = "lawyerAssigned")
+    @OneToMany(mappedBy = "lawyerAssigned", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"judgeAssigned", "lawyerAssigned", "client"})
     private List<CourtCase> cases = new ArrayList<>();
 

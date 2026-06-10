@@ -1,36 +1,23 @@
 package com.court.digitalcourtmanagement.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "judges")
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class,
-  property = "id"
-)
-public class Judge extends User {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Judge extends BaseUser {
 
-    private String judgeName;
     private String courtRoom;
 
-    @OneToMany(mappedBy = "judgeAssigned")
+    // FIX: mappedBy must match field name in CourtCase ("judgeAssigned")
+    @OneToMany(mappedBy = "judgeAssigned", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"judgeAssigned", "lawyerAssigned", "client"})
     private List<CourtCase> cases = new ArrayList<>();
-
-    public String getJudgeName() {
-        return judgeName;
-    }
-
-    public void setJudgeName(String judgeName) {
-        this.judgeName = judgeName;
-    }
 
     public String getCourtRoom() {
         return courtRoom;

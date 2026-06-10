@@ -1,22 +1,17 @@
 package com.court.digitalcourtmanagement.service;
 
 import com.court.digitalcourtmanagement.dto.CourtCaseDTO;
-
 import java.util.List;
 
 public interface CourtCaseService {
-
-    CourtCaseDTO CreateCase(CourtCaseDTO newCase);
-
-    List<CourtCaseDTO> GetAllCases();
-
-    CourtCaseDTO GetCaseById(Long id);
-
-    CourtCaseDTO UpdateCase(Long id, CourtCaseDTO updatedCase);
-
-    void DeleteCase(Long id);
-
-    CourtCaseDTO AssignLawyer(Long caseId, Long lawyerId, Long clientId);
-
-    CourtCaseDTO AssignJudge(Long caseId, Long judgeId);
+    CourtCaseDTO createCase(CourtCaseDTO dto);
+    List<CourtCaseDTO> getAllCases();
+    CourtCaseDTO getCaseById(Long id);
+    CourtCaseDTO updateCase(Long id, CourtCaseDTO dto);
+    void deleteCase(Long id);
+    CourtCaseDTO assignJudge(Long caseId, Long judgeId);
+    CourtCaseDTO assignLawyer(Long caseId, Long lawyerId, Long clientId);
+    List<CourtCaseDTO> getCasesByJudge(Long judgeId);
+    List<CourtCaseDTO> getCasesByLawyer(Long lawyerId);
+    List<CourtCaseDTO> getCasesByClient(Long clientId);
 }

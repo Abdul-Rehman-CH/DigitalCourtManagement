@@ -1,37 +1,42 @@
 package com.court.digitalcourtmanagement.entity;
 
-import java.time.LocalDate;
-import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "cases")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "caseId"
-)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "caseId")
 public class CourtCase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long caseId;
 
+    @Column(nullable = false)
     private String title;
+
+    @Column(length = 2000)
     private String description;
+
     private String status;
+
     private LocalDate filingDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "judge_id")
     @JsonIgnoreProperties({"cases"})
     private Judge judgeAssigned;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lawyer_id")
     @JsonIgnoreProperties({"cases"})
     private Lawyer lawyerAssigned;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
     @JsonIgnoreProperties({"cases", "cnicFrontImage", "cnicBackImage"})
     private Client client;
 

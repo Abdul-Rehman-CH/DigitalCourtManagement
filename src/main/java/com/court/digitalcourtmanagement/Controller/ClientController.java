@@ -2,14 +2,15 @@ package com.court.digitalcourtmanagement.Controller;
 
 import com.court.digitalcourtmanagement.dto.ClientDTO;
 import com.court.digitalcourtmanagement.service.ClientService;
-
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/api/clients")
 public class ClientController {
 
     private final ClientService clientService;
@@ -19,45 +20,53 @@ public class ClientController {
     }
 
     @PostMapping
-    public ClientDTO createClient(@RequestBody ClientDTO dto) {
-        return clientService.CreateClient(dto);
+    @PreAuthorize("hasAnyRole('ADMIN', 'LAWYER')")
+    public ResponseEntity<ClientDTO> createClient(@RequestBody ClientDTO dto) {
+        return ResponseEntity.ok(clientService.createClient(dto));
     }
 
     @GetMapping
-    public List<ClientDTO> getAllClients() {
-        return clientService.GetAllClients();
+    @PreAuthorize("hasAnyRole('ADMIN', 'JUDGE', 'LAWYER')")
+    public ResponseEntity<List<ClientDTO>> getAllClients() {
+        return ResponseEntity.ok(clientService.getAllClients());
     }
 
     @GetMapping("/{id}")
-    public ClientDTO getClientById(@PathVariable Long id) {
-        return clientService.GetClientById(id);
+    @PreAuthorize("hasAnyRole('ADMIN', 'JUDGE', 'LAWYER', 'CLIENT')")
+    public ResponseEntity<ClientDTO> getClientById(@PathVariable Long id) {
+        return ResponseEntity.ok(clientService.getClientById(id));
     }
 
     @PutMapping("/{id}")
-    public ClientDTO updateClient(@PathVariable Long id,
-                                  @RequestBody ClientDTO dto) {
-        return clientService.UpdateClient(id, dto);
+    @PreAuthorize("hasAnyRole('ADMIN', 'LAWYER')")
+    public ResponseEntity<ClientDTO> updateClient(@PathVariable Long id, @RequestBody ClientDTO dto) {
+        return ResponseEntity.ok(clientService.updateClient(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteClient(@PathVariable Long id) {
-        clientService.DeleteClient(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
+        clientService.deleteClient(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/cases")
-    public List<?> getClientCases(@PathVariable Long id) {
-        return clientService.GetClientCases(id);
+    @PreAuthorize("hasAnyRole('ADMIN', 'LAWYER', 'JUDGE', 'CLIENT')")
+    public ResponseEntity<List<?>> getClientCases(@PathVariable Long id) {
+        return ResponseEntity.ok(clientService.getClientCases(id));
     }
 
     @PostMapping("/{id}/cnic-front")
-    public void uploadFront(@PathVariable Long id,
-                            @RequestParam MultipartFile file) {
-        clientService.UploadCNICFront(id, file);
+    @PreAuthorize("hasAnyRole('ADMIN', 'LAWYER')")
+    public ResponseEntity<Void> uploadCNICFront(@PathVariable Long id, @RequestParam MultipartFile file) {
+        clientService.uploadCNICFront(id, file);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/cnic-back")
-    public void uploadBack(@PathVariable Long id,
-                           @RequestParam MultipartFile file) {
-        clientService.UploadCNICBack(id, file);
+    @PreAuthorize("hasAnyRole('ADMIN', 'LAWYER')")
+    public ResponseEntity<Void> uploadCNICBack(@PathVariable Long id, @RequestParam MultipartFile file) {
+        clientService.uploadCNICBack(id, file);
+        return ResponseEntity.ok().build();
     }
 }

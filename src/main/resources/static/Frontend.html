@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Adalat — Digital Court Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   RESET & TOKENS
+═══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1929;--navy-mid:#162840;--navy-lt:#1E3A5F;
+  --gold:#C8A84B;--gold-lt:#E2C87A;
+  --cream:#FAF7F2;--bg:#F0EDE7;--surface:#FFFFFF;
+  --border:#E2DDD5;--text:#1A1A2A;--muted:#6B7A8D;
+  --danger:#B93030;--danger-lt:#FDECEA;
+  --success:#217A4B;--success-lt:#E6F4ED;
+  --warning:#B76E00;--warning-lt:#FFF4E0;
+  --info:#1A6FA8;--info-lt:#E8F3FB;
+  --sidebar:240px;
+  --radius:8px;--radius-lg:12px;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;font-size:14px;background:var(--bg);color:var(--text)}
+a{text-decoration:none;color:inherit}
+button{font-family:'Inter',sans-serif;cursor:pointer}
+input,select,textarea{font-family:'Inter',sans-serif}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+
+/* ═══════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════ */
+#app{display:flex;min-height:100vh}
+.sidebar{
+  width:var(--sidebar);background:var(--navy);color:#fff;
+  display:flex;flex-direction:column;position:fixed;
+  left:0;top:0;height:100vh;overflow-y:auto;z-index:100;
+  transition:transform .25s;
+}
+.main-wrap{margin-left:var(--sidebar);display:flex;flex-direction:column;min-height:100vh;flex:1}
+.topbar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  height:56px;padding:0 28px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:50;
+}
+.content{padding:28px 32px;flex:1;max-width:1400px;width:100%}
+
+/* ═══════════════════════════════════════════
+   LOGIN PAGE
+═══════════════════════════════════════════ */
+#login-page{
+  min-height:100vh;background:var(--navy);
+  display:grid;grid-template-columns:1fr 460px;
+}
+.login-hero{
+  padding:48px 56px;display:flex;flex-direction:column;
+  justify-content:space-between;position:relative;overflow:hidden;
+}
+.login-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 700px 700px at 25% 45%,rgba(200,168,75,.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-brand{display:flex;align-items:center;gap:12px;position:relative}
+.hero-brand-icon{
+  width:46px;height:46px;border-radius:11px;
+  background:rgba(200,168,75,.13);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+}
+.hero-brand-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--gold)}
+.hero-brand-sub{font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.hero-center{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;padding:3rem 0}
+.hero-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.hero-headline{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.4rem,3.8vw,3.5rem);font-weight:700;
+  line-height:1.08;color:#fff;margin-bottom:20px;
+}
+.hero-headline em{font-style:normal;color:var(--gold)}
+.hero-body{font-size:15px;line-height:1.75;color:rgba(255,255,255,.45);max-width:400px}
+.hero-stats{display:flex;gap:48px;padding-top:28px;border-top:1px solid rgba(200,168,75,.18);position:relative}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--gold);display:block}
+.stat-lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.login-panel{background:var(--cream);display:flex;align-items:center;justify-content:center;padding:32px}
+.login-card{width:100%;max-width:360px}
+.login-title{font-family:'Playfair Display',serif;font-size:26px;color:var(--text);margin-bottom:6px;font-weight:700}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:28px}
+.demos-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.demo-chip{
+  padding:10px 8px;border:1.5px solid var(--border);border-radius:8px;
+  background:var(--surface);cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;gap:4px;transition:all .15s;
+}
+.demo-chip:hover{border-color:var(--gold);background:var(--bg)}
+.demo-chip-icon{font-size:18px}
+.demo-chip-label{font-size:11.5px;font-weight:600;color:var(--muted)}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);font-size:11.5px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ═══════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════ */
+.sb-brand{padding:20px 18px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
+.sb-brand-icon{width:38px;height:38px;border-radius:9px;background:rgba(200,168,75,.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.sb-brand-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--gold);letter-spacing:.04em}
+.sb-brand-sub{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.sb-user{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
+.sb-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;color:var(--navy);flex-shrink:0;
+}
+.sb-user-name{font-size:13px;color:#fff;font-weight:600;display:block}
+.sb-role-badge{
+  display:inline-block;margin-top:3px;padding:2px 8px;
+  border-radius:99px;font-size:10px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;
+}
+.sb-nav{flex:1;padding:10px 0}
+.sb-section-label{padding:6px 18px 3px;font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-top:8px}
+.nav-item{
+  display:flex;align-items:center;gap:10px;width:100%;
+  padding:9px 18px;background:none;border:none;
+  border-left:3px solid transparent;
+  color:rgba(255,255,255,.6);font-size:13px;font-weight:500;
+  text-align:left;transition:all .12s;
+}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.05)}
+.nav-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(200,168,75,.08)}
+.nav-icon{font-size:15px;width:20px;text-align:center}
+.sb-footer{padding:14px 18px;border-top:1px solid rgba(255,255,255,.07)}
+.btn-logout{
+  display:flex;align-items:center;gap:8px;width:100%;
+  padding:8px 12px;background:rgba(185,48,48,.15);color:#E74C3C;
+  border:none;border-radius:7px;font-size:12.5px;font-weight:600;
+}
+.btn-logout:hover{background:rgba(185,48,48,.25)}
+
+/* ═══════════════════════════════════════════
+   TOPBAR
+═══════════════════════════════════════════ */
+.topbar-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text)}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.topbar-date{font-size:12px;color:var(--muted)}
+.topbar-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:var(--navy);
+}
+
+/* ═══════════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════════ */
+.form-label{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:5px}
+.form-input,.form-select,.form-textarea{
+  width:100%;padding:9px 12px;border:1.5px solid var(--border);
+  border-radius:7px;font-size:13px;background:var(--surface);
+  color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,168,75,.12);
+}
+.form-select{appearance:none;cursor:pointer}
+.form-textarea{resize:vertical;min-height:80px;line-height:1.6}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{margin-bottom:0}
+.col-full{grid-column:1/-1}
+
+/* ═══════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;border-radius:7px;font-size:13px;font-weight:600;
+  border:1.5px solid transparent;transition:all .15s;cursor:pointer;
+}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-navy{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn-navy:hover{background:var(--navy-mid)}
+.btn-gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.btn-gold:hover{background:var(--gold-lt)}
+.btn-ghost{background:transparent;color:var(--muted);border-color:var(--border)}
+.btn-ghost:hover{background:var(--bg)}
+.btn-danger{background:var(--danger-lt);color:var(--danger);border-color:var(--danger-lt)}
+.btn-danger:hover{background:#F5C6C2}
+.btn-success{background:var(--success-lt);color:var(--success);border-color:var(--success-lt)}
+.btn-full{width:100%;justify-content:center}
+
+/* ═══════════════════════════════════════════
+   CARDS
+═══════════════════════════════════════════ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:20px;overflow:hidden}
+.card-header{
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text)}
+.card-body{padding:20px}
+
+/* ═══════════════════════════════════════════
+   STAT CARDS
+═══════════════════════════════════════════ */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:18px 20px;display:flex;align-items:flex-start;gap:14px;
+  transition:box-shadow .15s;
+}
+.stat-card:hover{box-shadow:0 4px 18px rgba(0,0,0,.07)}
+.stat-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
+}
+.stat-label{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.stat-value{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--text);line-height:1}
+
+/* ═══════════════════════════════════════════
+   TABLE
+═══════════════════════════════════════════ */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{
+  padding:9px 14px;text-align:left;font-size:10.5px;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  border-bottom:2px solid var(--border);background:#FAFAF8;white-space:nowrap;
+}
+tbody td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#FAFAF8}
+.empty-row td{text-align:center;padding:50px;color:var(--muted)}
+.empty-icon{font-size:28px;display:block;margin-bottom:8px}
+
+/* ═══════════════════════════════════════════
+   BADGES
+═══════════════════════════════════════════ */
+.badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.badge-ACTIVE,.badge-active{background:var(--success-lt);color:var(--success)}
+.badge-INACTIVE,.badge-inactive{background:#F5F5F5;color:#888}
+.badge-ON_LEAVE{background:var(--warning-lt);color:var(--warning)}
+.badge-SUSPENDED{background:var(--danger-lt);color:var(--danger)}
+.badge-PENDING{background:#FFF4E0;color:#B76E00}
+.badge-HEARING{background:var(--info-lt);color:var(--info)}
+.badge-IN_PROGRESS{background:#F0E8FF;color:#6B30B0}
+.badge-ADJOURNED{background:#FFF0D6;color:#9C5B00}
+.badge-CLOSED{background:#F5F5F5;color:#555}
+.badge-DISMISSED{background:var(--danger-lt);color:var(--danger)}
+
+/* ═══════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════ */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(11,25,41,.6);
+  display:flex;align-items:center;justify-content:center;
+  z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s;
+  backdrop-filter:blur(2px);
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--surface);border-radius:14px;width:90%;max-width:560px;
+  max-height:90vh;overflow-y:auto;transform:translateY(20px);
+  transition:transform .2s;box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Playfair Display',serif;font-size:17px;color:var(--text);font-weight:700}
+.modal-close{background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1;padding:4px}
+.modal-body{padding:20px 24px}
+.modal-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+#toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;border-radius:10px;font-size:13px;font-weight:500;
+  box-shadow:0 4px 20px rgba(0,0,0,.12);max-width:320px;cursor:pointer;
+  animation:slideUp .2s ease;
+}
+.toast-success{background:var(--navy);color:var(--gold);border:1px solid var(--navy-mid);border-left:4px solid var(--gold)}
+.toast-error{background:#fff;color:var(--danger);border:1px solid #F5C6C2;border-left:4px solid var(--danger)}
+@keyframes slideUp{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* ═══════════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════════ */
+.search-wrap{position:relative}
+.search-wrap input{padding-left:32px;width:260px}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+
+/* ═══════════════════════════════════════════
+   SECTION HEADER
+═══════════════════════════════════════════ */
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.section-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text)}
+.section-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* ═══════════════════════════════════════════
+   DASHBOARD SPECIFICS
+═══════════════════════════════════════════ */
+.dash-subtitle{font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:24px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.progress-row{margin-bottom:10px}
+.progress-top{display:flex;justify-content:space-between;margin-bottom:4px}
+.progress-label{font-size:12px;font-weight:600;color:var(--text)}
+.progress-count{font-size:12px;color:var(--muted)}
+.progress-bar{height:5px;border-radius:99px;background:#F0ECE4;overflow:hidden}
+.progress-fill{height:100%;border-radius:99px;background:var(--gold);transition:width .4s}
+.quick-action{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  background:#FAFAF8;border:1px solid var(--border);border-radius:9px;
+  cursor:pointer;text-align:left;transition:all .15s;width:100%;
+}
+.quick-action:hover{background:var(--bg);border-color:var(--gold)}
+.qa-icon{font-size:20px;flex-shrink:0}
+.qa-title{font-size:13px;font-weight:600;color:var(--text);display:block}
+.qa-desc{font-size:11.5px;color:var(--muted);display:block}
+.case-row{
+  display:flex;align-items:center;gap:14px;padding:14px 20px;
+  border-bottom:1px solid var(--border);transition:background .1s;
+}
+.case-row:last-child{border-bottom:none}
+.case-row:hover{background:#FAFAF8}
+.case-num{
+  width:42px;height:42px;border-radius:9px;background:rgba(200,168,75,.12);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:15px;font-weight:700;
+  color:var(--gold);flex-shrink:0;
+}
+.case-title{font-weight:600;font-size:13.5px;color:var(--text);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.case-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.client-card{
+  padding:20px 24px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);border-left:4px solid var(--gold);margin-bottom:14px;
+}
+.client-card.status-CLOSED{border-left-color:var(--success)}
+.client-card.status-HEARING{border-left-color:var(--info)}
+.client-card.status-PENDING{border-left-color:var(--warning)}
+.client-card.status-DISMISSED{border-left-color:var(--danger)}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
+.info-box{padding:8px 12px;background:#FAFAF8;border-radius:7px;border:1px solid var(--border)}
+.info-box-label{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.info-box-value{font-size:13px;color:var(--text);font-weight:500}
+.hint-box{
+  padding:16px 20px;background:rgba(200,168,75,.06);border-radius:var(--radius-lg);
+  border:1px solid rgba(200,168,75,.2);margin-bottom:20px;
+}
+.hint-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.hint-body{font-size:13px;color:var(--muted);line-height:1.7}
+.role-count-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.role-count-box{padding:12px 14px;background:#FAFAF8;border-radius:8px;border:1px solid var(--border)}
+.role-count-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--text);margin-top:4px}
+.code-badge{font-size:11.5px;background:#F5F0E8;padding:2px 6px;border-radius:4px;font-family:monospace}
+
+/* ═══════════════════════════════════════════
+   MOBILE MENU TOGGLE
+═══════════════════════════════════════════ */
+.menu-toggle{display:none;background:none;border:none;font-size:22px;color:var(--text);cursor:pointer;padding:4px}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:900px){
+  #login-page{grid-template-columns:1fr}
+  .login-hero{display:none}
+  .login-panel{min-height:100vh}
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main-wrap{margin-left:0}
+  .menu-toggle{display:block}
+  .two-col{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .col-full{grid-column:1}
+}
+@media(max-width:600px){
+  .content{padding:20px 16px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .section-header{flex-direction:column;align-items:flex-start}
+  .search-wrap input{width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     LOGIN PAGE
+════════════════════════════════════════════ -->
+<div id="login-page">
+  <div class="login-hero">
+    <div class="hero-brand">
+      <div class="hero-brand-icon">⚖️</div>
+      <div>
+        <div class="hero-brand-name">Adalat</div>
+        <div class="hero-brand-sub">Digital Court Management</div>
+      </div>
+    </div>
+    <div class="hero-center">
+      <div class="hero-eyebrow">Judiciary Modernisation Initiative</div>
+      <h1 class="hero-headline">Justice,<br><em>organised</em><br>with precision.</h1>
+      <p class="hero-body">A unified secure platform for courts to manage cases, hearings, lawyers, and clients — with role-based access for every participant.</p>
+    </div>
+    <div class="hero-stats">
+      <div><span class="stat-num">4</span><span class="stat-lbl">Role Portals</span></div>
+      <div><span class="stat-num">JWT</span><span class="stat-lbl">Secured</span></div>
+      <div><span class="stat-num">∞</span><span class="stat-lbl">Cases</span></div>
+    </div>
+  </div>
+  <div class="login-panel">
+    <div class="login-card">
+      <div class="login-title">Sign in</div>
+      <div class="login-sub">Access your role-based dashboard</div>
+      <div id="login-error" style="display:none;background:var(--danger-lt);border:1px solid #F5C6C2;color:var(--danger);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px"></div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="form-label" for="login-user">Username</label>
+        <input class="form-input" id="login-user" type="text" placeholder="Enter username" autocomplete="username"/>
+      </div>
+      <div class="form-group" style="margin-bottom:20px">
+        <label class="form-label" for="login-pass">Password</label>
+        <input class="form-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+      <button class="btn btn-navy btn-full" id="login-btn" onclick="doLogin()">Sign In →</button>
+      <div class="divider">Quick access demos</div>
+      <div class="demos-grid">
+        <div class="demo-chip" onclick="fillDemo('admin','admin123')"><span class="demo-chip-icon">⚖️</span><span class="demo-chip-label">Admin</span></div>
+        <div class="demo-chip" onclick="fillDemo('judge1','judge123')"><span class="demo-chip-icon">👨‍⚖️</span><span class="demo-chip-label">Judge</span></div>
+        <div class="demo-chip" onclick="fillDemo('lawyer1','lawyer123')"><span class="demo-chip-icon">📋</span><span class="demo-chip-label">Lawyer</span></div>
+        <div class="demo-chip" onclick="fillDemo('client1','client123')"><span class="demo-chip-icon">👤</span><span class="demo-chip-label">Client</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     MAIN APP (hidden until login)
+════════════════════════════════════════════ -->
+<div id="app" style="display:none">
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-brand-icon">⚖️</div>
+      <div>
+        <div class="sb-brand-name">Adalat</div>
+        <div class="sb-brand-sub">Court Management</div>
+      </div>
+    </div>
+    <div class="sb-user">
+      <div class="sb-avatar" id="sb-avatar">A</div>
+      <div>
+        <span class="sb-user-name" id="sb-username">User</span>
+        <span class="sb-role-badge" id="sb-role-badge">ROLE</span>
+      </div>
+    </div>
+    <nav class="sb-nav" id="sb-nav"></nav>
+    <div class="sb-footer">
+      <button class="btn-logout" onclick="doLogout()">🚪 Sign out</button>
+    </div>
+  </div>
+
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Main -->
+  <div class="main-wrap">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbar-date"></span>
+        <div class="topbar-avatar" id="topbar-avatar">A</div>
+      </div>
+    </div>
+    <div class="content" id="main-content"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     MODALS
+════════════════════════════════════════════ -->
+<!-- Generic form modal -->
+<div class="modal-overlay" id="form-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Form</span>
+      <button class="modal-close" onclick="closeModal('form-modal')">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('form-modal')">Cancel</button>
+      <button class="btn btn-navy" id="modal-save-btn" onclick="modalSave()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete modal -->
+<div class="modal-overlay" id="del-modal">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <span class="modal-title">Confirm Deletion</span>
+      <button class="modal-close" onclick="closeModal('del-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:14px;color:var(--text);line-height:1.6">Are you sure you want to delete <strong id="del-name"></strong>? This cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('del-modal')">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Case detail modal -->
+<div class="modal-overlay" id="case-detail-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Case Details</span>
+      <button class="modal-close" onclick="closeModal('case-detail-modal')">×</button>
+    </div>
+    <div class="modal-body" id="case-detail-body"></div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════════════════════════════════
+const API = 'http://localhost:8080';
+const CASE_STATUSES = ['PENDING','HEARING','IN_PROGRESS','ADJOURNED','CLOSED','DISMISSED'];
+const USER_STATUSES = ['ACTIVE','INACTIVE','ON_LEAVE','SUSPENDED'];
+
+// ════════════════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════════════════
+let state = {
+  token: null, role: null, username: null, domainId: null,
+  active: 'dashboard',
+  deleteTarget: null, deleteEndpoint: null, deleteCallback: null,
+  modalSaveFn: null,
+  cachedJudges: [], cachedLawyers: [], cachedClients: [],
+};
+
+// ════════════════════════════════════════════════════════════════════════
+//  API HELPER
+// ════════════════════════════════════════════════════════════════════════
+async function api(method, path, body = null) {
+  const opts = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(state.token ? { Authorization: `Bearer ${state.token}` } : {}),
+    },
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+  if (!res.ok) {
+    const txt = await res.text().catch(() => '');
+    throw new Error(txt || `HTTP ${res.status}`);
+  }
+  if (res.status === 204) return null;
+  return res.json();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════════════════════════════
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.innerHTML = `<span>${type === 'success' ? '✓' : '✕'}</span><span>${msg}</span>`;
+  el.onclick = () => el.remove();
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  MODAL
+// ════════════════════════════════════════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ════════════════════════════════════════════════════════════════════════
+//  SIDEBAR TOGGLE (mobile)
+// ════════════════════════════════════════════════════════════════════════
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  LOGIN
+// ════════════════════════════════════════════════════════════════════════
+function fillDemo(u, p) {
+  document.getElementById('login-user').value = u;
+  document.getElementById('login-pass').value = p;
+}
+
+async function doLogin() {
+  const username = document.getElementById('login-user').value.trim();
+  const password = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  errEl.style.display = 'none';
+  btn.textContent = 'Signing in…'; btn.disabled = true;
+  try {
+    const data = await api('POST', '/api/auth/login', { username, password });
+    state.token = data.token;
+    state.role = data.role;
+    state.username = data.username;
+    state.domainId = data.domainEntityId ?? null;
+    sessionStorage.setItem('adalat', JSON.stringify({ token:data.token, role:data.role, username:data.username, domainId:data.domainEntityId??null }));
+    initApp();
+  } catch (e) {
+    errEl.textContent = e.message || 'Invalid credentials.';
+    errEl.style.display = 'block';
+    btn.textContent = 'Sign In →'; btn.disabled = false;
+  }
+}
+
+document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogout() {
+  sessionStorage.removeItem('adalat');
+  state = { token:null, role:null, username:null, domainId:null, active:'dashboard', deleteTarget:null, deleteEndpoint:null, deleteCallback:null, modalSaveFn:null, cachedJudges:[], cachedLawyers:[], cachedClients:[] };
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-page').style.display = 'grid';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-btn').textContent = 'Sign In →';
+  document.getElementById('login-btn').disabled = false;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  INIT APP
+// ════════════════════════════════════════════════════════════════════════
+function initApp() {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+
+  // Topbar
+  document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-PK', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('topbar-avatar').textContent = (state.username||'?')[0].toUpperCase();
+  document.getElementById('sb-avatar').textContent = (state.username||'?')[0].toUpperCase();
+  document.getElementById('sb-username').textContent = state.username;
+
+  const roleColors = { ADMIN:'rgba(200,168,75,.18)', JUDGE:'rgba(26,111,168,.18)', LAWYER:'rgba(107,48,176,.18)', CLIENT:'rgba(33,122,75,.18)' };
+  const roleTextColors = { ADMIN:'var(--gold)', JUDGE:'var(--info)', LAWYER:'#6B30B0', CLIENT:'var(--success)' };
+  const badge = document.getElementById('sb-role-badge');
+  badge.textContent = state.role;
+  badge.style.background = roleColors[state.role] || '#eee';
+  badge.style.color = roleTextColors[state.role] || '#555';
+
+  buildNav();
+  navigate('dashboard');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  NAV
+// ════════════════════════════════════════════════════════════════════════
+const NAV = {
+  ADMIN:  [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'judges', icon:'👨‍⚖️', label:'Judges' }, { id:'lawyers', icon:'📋', label:'Lawyers' }, { id:'clients', icon:'👤', label:'Clients' }, { id:'cases', icon:'⚖️', label:'All Cases' }, { id:'accounts', icon:'🔑', label:'Accounts' }],
+  JUDGE:  [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'my-cases', icon:'⚖️', label:'My Cases' }, { id:'lawyers', icon:'📋', label:'Lawyers' }, { id:'clients', icon:'👤', label:'Clients' }],
+  LAWYER: [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'my-cases', icon:'⚖️', label:'My Cases' }, { id:'clients', icon:'👤', label:'My Clients' }, { id:'all-cases', icon:'📁', label:'All Cases' }],
+  CLIENT: [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'my-cases', icon:'⚖️', label:'My Cases' }],
+};
+
+const PAGE_TITLES = { dashboard:'Dashboard', judges:'Judges', lawyers:'Lawyers', clients:'Clients', cases:'Cases', 'my-cases':'My Cases', 'all-cases':'All Cases', accounts:'Login Accounts' };
+
+function buildNav() {
+  const items = NAV[state.role] || NAV.CLIENT;
+  const nav = document.getElementById('sb-nav');
+  nav.innerHTML = `<div class="sb-section-label">Navigation</div>` +
+    items.map(i => `<button class="nav-item" id="nav-${i.id}" onclick="navigate('${i.id}')"><span class="nav-icon">${i.icon}</span><span>${i.label}</span></button>`).join('');
+}
+
+function navigate(page) {
+  state.active = page;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const navEl = document.getElementById(`nav-${page}`);
+  if (navEl) navEl.classList.add('active');
+  document.getElementById('topbar-title').textContent = PAGE_TITLES[page] || 'Dashboard';
+  closeSidebar();
+  renderPage(page);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  ROUTER
+// ════════════════════════════════════════════════════════════════════════
+function renderPage(page) {
+  const el = document.getElementById('main-content');
+  el.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted)">Loading…</div>';
+  switch (page) {
+    case 'dashboard':
+      if (state.role === 'ADMIN')  renderAdminDashboard();
+      else if (state.role === 'JUDGE')  renderJudgeDashboard();
+      else if (state.role === 'LAWYER') renderLawyerDashboard();
+      else renderClientDashboard();
+      break;
+    case 'judges':    renderJudges(); break;
+    case 'lawyers':   renderLawyers(); break;
+    case 'clients':   renderClients(); break;
+    case 'cases':     renderCases('/api/cases', 'All Cases', true, true, true); break;
+    case 'all-cases': renderCases('/api/cases', 'All Cases', state.role==='LAWYER', state.role==='LAWYER', false); break;
+    case 'my-cases':
+      if (state.role === 'JUDGE')  renderCases(`/api/cases/by-judge/${state.domainId}`, 'My Cases', false, true, false);
+      else if (state.role === 'LAWYER') renderCases(`/api/cases/by-lawyer/${state.domainId}`, 'My Cases', true, true, false);
+      else renderCases(`/api/cases/by-client/${state.domainId}`, 'My Cases', false, false, false);
+      break;
+    case 'accounts':  renderAccounts(); break;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  HELPERS: HTML BUILDERS
+// ════════════════════════════════════════════════════════════════════════
+function badge(val) {
+  const clean = (val||'').replace(/_/g,' ');
+  return `<span class="badge badge-${val||''}">${clean||'—'}</span>`;
+}
+
+function statCard(label, value, icon, bg, color) {
+  return `<div class="stat-card">
+    <div class="stat-icon" style="background:${bg}">${icon}</div>
+    <div>
+      <div class="stat-label">${label}</div>
+      <div class="stat-value" style="color:${color||'var(--text)'}">${value??'—'}</div>
+    </div>
+  </div>`;
+}
+
+function tableWrap(cols, rows, emptyMsg) {
+  const thead = `<thead><tr>${cols.map(c => `<th>${c.label}</th>`).join('')}</tr></thead>`;
+  let tbody;
+  if (!rows || rows.length === 0) {
+    tbody = `<tbody><tr class="empty-row"><td colspan="${cols.length}"><span class="empty-icon">📂</span>${emptyMsg||'No records found'}</td></tr></tbody>`;
+  } else {
+    tbody = `<tbody>${rows.map(row => `<tr>${cols.map(c => `<td>${c.render ? c.render(row) : (row[c.key]??'—')}</td>`).join('')}</tr>`).join('')}</tbody>`;
+  }
+  return `<div class="table-wrap"><table>${thead}${tbody}</table></div>`;
+}
+
+function actionBtns(editFn, deleteFn) {
+  return `<div style="display:flex;gap:6px">
+    ${editFn ? `<button class="btn btn-sm btn-ghost" onclick="${editFn}">Edit</button>` : ''}
+    ${deleteFn ? `<button class="btn btn-sm btn-danger" onclick="${deleteFn}">Delete</button>` : ''}
+  </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  SELECT OPTIONS HELPERS
+// ════════════════════════════════════════════════════════════════════════
+function statusOpts(statuses) {
+  return statuses.map(s => `<option value="${s}">${s.replace(/_/g,' ')}</option>`).join('');
+}
+function entityOpts(arr, placeholder) {
+  return `<option value="">${placeholder}</option>` + (arr||[]).map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  ADMIN DASHBOARD
+// ════════════════════════════════════════════════════════════════════════
+async function renderAdminDashboard() {
+  const el = document.getElementById('main-content');
+  try {
+    const [js, ls, cs, cases] = await Promise.allSettled([
+      api('GET','/api/judges'), api('GET','/api/lawyers'),
+      api('GET','/api/clients'), api('GET','/api/cases'),
+    ]);
+    state.cachedJudges  = js.status==='fulfilled' ? js.value : [];
+    state.cachedLawyers = ls.status==='fulfilled' ? ls.value : [];
+    state.cachedClients = cs.status==='fulfilled' ? cs.value : [];
+    const casesData = cases.status==='fulfilled' ? cases.value : [];
+
+    const byStatus = {};
+    casesData.forEach(c => { byStatus[c.status] = (byStatus[c.status]||0)+1; });
+    const total = casesData.length || 1;
+
+    el.innerHTML = `
+      <div class="section-title" style="margin-bottom:4px">System Overview</div>
+      <div class="dash-subtitle">Full administrative view of the court management system</div>
+      <div class="stats-grid">
+        ${statCard('Total Judges',   state.cachedJudges.length,  '👨‍⚖️', 'rgba(11,25,41,.08)',    'var(--text)')}
+        ${statCard('Total Lawyers',  state.cachedLawyers.length, '📋',  'rgba(107,48,176,.1)', '#6B30B0')}
+        ${statCard('Total Clients',  state.cachedClients.length, '👤',  'rgba(33,122,75,.1)',  'var(--success)')}
+        ${statCard('Active Cases',   byStatus['IN_PROGRESS']||0, '⚖️',  'rgba(107,48,176,.1)', '#6B30B0')}
+        ${statCard('Pending Cases',  byStatus['PENDING']||0,     '⏳',  'rgba(200,168,75,.12)','var(--gold)')}
+        ${statCard('Closed Cases',   byStatus['CLOSED']||0,      '✅',  'rgba(33,122,75,.1)',  'var(--success)')}
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Case Status Breakdown</span></div>
+          <div class="card-body">
+            ${CASE_STATUSES.map(s => `
+              <div class="progress-row">
+                <div class="progress-top">
+                  <span class="progress-label">${s.replace(/_/g,' ')}</span>
+                  <span class="progress-count">${byStatus[s]||0}</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(((byStatus[s]||0)/total)*100)}%"></div></div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Quick Actions</span></div>
+          <div class="card-body" style="display:grid;gap:10px">
+            <button class="quick-action" onclick="openAccountModal()">
+              <span class="qa-icon">🔑</span>
+              <div><span class="qa-title">Create Login Account</span><span class="qa-desc">Give a judge, lawyer or client access</span></div>
+            </button>
+            <button class="quick-action" onclick="navigate('judges')">
+              <span class="qa-icon">👨‍⚖️</span>
+              <div><span class="qa-title">Manage Judges</span><span class="qa-desc">Add or update judge records</span></div>
+            </button>
+            <button class="quick-action" onclick="navigate('lawyers')">
+              <span class="qa-icon">📋</span>
+              <div><span class="qa-title">Manage Lawyers</span><span class="qa-desc">Register advocates</span></div>
+            </button>
+            <button class="quick-action" onclick="navigate('cases')">
+              <span class="qa-icon">⚖️</span>
+              <div><span class="qa-title">View All Cases</span><span class="qa-desc">Browse and file court cases</span></div>
+            </button>
+          </div>
+        </div>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  JUDGE DASHBOARD
+// ════════════════════════════════════════════════════════════════════════
+async function renderJudgeDashboard() {
+  const el = document.getElementById('main-content');
+  if (!state.domainId) {
+    el.innerHTML = `<div class="hint-box"><div class="hint-title">⚠️ Profile not linked</div><div class="hint-body">Your account is not linked to a judge profile. Ask the admin to link your account.</div></div>`;
+    return;
+  }
+  try {
+    const cases = await api('GET', `/api/cases/by-judge/${state.domainId}`);
+    const byStatus = {};
+    cases.forEach(c => { byStatus[c.status] = (byStatus[c.status]||0)+1; });
+    const upcoming = cases.filter(c => ['PENDING','HEARING','IN_PROGRESS'].includes(c.status));
+
+    el.innerHTML = `
+      <div class="section-title" style="margin-bottom:4px">Judge's Chamber</div>
+      <div class="dash-subtitle">Cases currently under your jurisdiction</div>
+      <div class="stats-grid">
+        ${statCard('Total Cases',    cases.length,               '⚖️', 'rgba(11,25,41,.08)',   'var(--text)')}
+        ${statCard('Active',         byStatus['IN_PROGRESS']||0, '🔴', 'rgba(185,48,48,.1)',   'var(--danger)')}
+        ${statCard('Hearing',        byStatus['HEARING']||0,     '🔵', 'rgba(26,111,168,.1)',  'var(--info)')}
+        ${statCard('Pending',        byStatus['PENDING']||0,     '⏳', 'rgba(200,168,75,.12)', 'var(--gold)')}
+        ${statCard('Closed',         byStatus['CLOSED']||0,      '✅', 'rgba(33,122,75,.1)',   'var(--success)')}
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Active &amp; Upcoming Cases</span>
+          <span style="font-size:12px;color:var(--muted)">${upcoming.length} case${upcoming.length!==1?'s':''}</span>
+        </div>
+        ${upcoming.length === 0
+          ? `<div style="text-align:center;padding:50px;color:var(--muted)"><div style="font-size:32px;margin-bottom:8px">🏛️</div><div>No active cases assigned.</div></div>`
+          : upcoming.map(c => `
+            <div class="case-row">
+              <div class="case-num">#${c.caseId}</div>
+              <div style="flex:1;min-width:0">
+                <span class="case-title">${c.title}</span>
+                <div class="case-meta">Client: ${c.clientName||'—'} · Lawyer: ${c.lawyerName||'—'}</div>
+              </div>
+              ${badge(c.status)}
+            </div>`).join('')}
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  LAWYER DASHBOARD
+// ════════════════════════════════════════════════════════════════════════
+async function renderLawyerDashboard() {
+  const el = document.getElementById('main-content');
+  if (!state.domainId) {
+    el.innerHTML = `<div class="hint-box"><div class="hint-title">⚠️ Profile not linked</div><div class="hint-body">Your account is not linked to a lawyer profile. Ask the admin to link your account.</div></div>`;
+    return;
+  }
+  try {
+    const cases = await api('GET', `/api/cases/by-lawyer/${state.domainId}`);
+    const byStatus = {};
+    cases.forEach(c => { byStatus[c.status] = (byStatus[c.status]||0)+1; });
+    const clients = [...new Set(cases.map(c=>c.clientName).filter(Boolean))];
+
+    el.innerHTML = `
+      <div class="section-title" style="margin-bottom:4px">Advocate's Brief</div>
+      <div class="dash-subtitle">Your caseload and client overview</div>
+      <div class="stats-grid">
+        ${statCard('Total Cases',  cases.length,               '⚖️', 'rgba(107,48,176,.1)', '#6B30B0')}
+        ${statCard('Active',       byStatus['IN_PROGRESS']||0, '🔴', 'rgba(185,48,48,.1)',  'var(--danger)')}
+        ${statCard('Pending',      byStatus['PENDING']||0,     '⏳', 'rgba(200,168,75,.12)','var(--gold)')}
+        ${statCard('Clients',      clients.length,             '👤', 'rgba(33,122,75,.1)',  'var(--success)')}
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Case Docket</span></div>
+          ${cases.length === 0
+            ? `<div style="text-align:center;padding:50px;color:var(--muted)"><div style="font-size:32px;margin-bottom:8px">📋</div><div>No cases assigned yet.</div></div>`
+            : cases.slice(0,10).map(c => `
+              <div class="case-row">
+                <div style="flex:1;min-width:0">
+                  <span class="case-title">${c.title}</span>
+                  <div class="case-meta">${c.clientName||'—'} · Filed: ${c.filingDate||'—'}</div>
+                </div>
+                ${badge(c.status)}
+              </div>`).join('')}
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Clients</span></div>
+          ${clients.length === 0
+            ? `<div style="text-align:center;padding:40px;color:var(--muted);font-size:13px">No clients yet</div>`
+            : clients.map(name => `
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border)">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(107,48,176,.12);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#6B30B0;flex-shrink:0">${name[0]}</div>
+                <span style="font-size:13px;font-weight:500;color:var(--text)">${name}</span>
+              </div>`).join('')}
+        </div>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  CLIENT DASHBOARD
+// ════════════════════════════════════════════════════════════════════════
+async function renderClientDashboard() {
+  const el = document.getElementById('main-content');
+  if (!state.domainId) {
+    el.innerHTML = `<div class="hint-box"><div class="hint-title">⚠️ Profile not linked</div><div class="hint-body">Your account is not linked to a client profile. Contact the admin.</div></div>`;
+    return;
+  }
+  try {
+    const cases = await api('GET', `/api/cases/by-client/${state.domainId}`);
+    const active = cases.filter(c=>!['CLOSED','DISMISSED'].includes(c.status));
+
+    el.innerHTML = `
+      <div class="section-title" style="margin-bottom:4px">Your Legal Cases</div>
+      <div class="dash-subtitle">Track the status of all cases you are party to</div>
+      <div class="stats-grid">
+        ${statCard('Total Cases',  cases.length,   '⚖️', 'rgba(33,122,75,.1)',  'var(--success)')}
+        ${statCard('Active',       active.length,  '🔴', 'rgba(185,48,48,.1)',  'var(--danger)')}
+        ${statCard('Closed',       cases.filter(c=>c.status==='CLOSED').length, '✅', 'rgba(11,25,41,.08)', 'var(--text)')}
+      </div>
+      ${cases.length === 0
+        ? `<div class="card"><div style="text-align:center;padding:70px;color:var(--muted)"><div style="font-size:40px;margin-bottom:12px">⚖️</div><div style="font-size:16px;font-weight:600;margin-bottom:6px">No cases found</div><div style="font-size:13px">You have no court cases on record.</div></div></div>`
+        : cases.map(c => `
+          <div class="client-card status-${c.status}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+              <div>
+                <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text)">${c.title}</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:3px">Case #${c.caseId} · Filed: ${c.filingDate||'—'}</div>
+              </div>
+              ${badge(c.status)}
+            </div>
+            ${c.description ? `<p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px">${c.description.slice(0,200)}${c.description.length>200?'…':''}</p>` : ''}
+            <div class="info-grid">
+              <div class="info-box"><div class="info-box-label">Judge</div><div class="info-box-value">${c.judgeName||'Not assigned'}</div></div>
+              <div class="info-box"><div class="info-box-label">Lawyer</div><div class="info-box-value">${c.lawyerName||'Not assigned'}</div></div>
+            </div>
+          </div>`).join('')}`;
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  JUDGES SECTION
+// ════════════════════════════════════════════════════════════════════════
+let judgesData = [];
+async function renderJudges() {
+  const canEdit = state.role === 'ADMIN';
+  const el = document.getElementById('main-content');
+  try {
+    judgesData = await api('GET', '/api/judges');
+    renderJudgesTable(judgesData, canEdit);
+  } catch(e) { el.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`; }
+}
+
+function renderJudgesTable(data, canEdit) {
+  const el = document.getElementById('main-content');
+  const q = el.querySelector('#judge-search')?.value?.toLowerCase() || '';
+  const filtered = data.filter(j =>
+    (j.name||'').toLowerCase().includes(q) ||
+    (j.email||'').toLowerCase().includes(q) ||
+    (j.courtRoom||'').toLowerCase().includes(q)
+  );
+
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">Judges</h2>
+      <div class="section-actions">
+        <div class="search-wrap"><span class="search-icon">🔍</span><input class="form-input" id="judge-search" placeholder="Search judges…" oninput="filterJudges()" value="${q}"/></div>
+        ${canEdit ? `<button class="btn btn-navy" onclick="openJudgeForm()">+ Add Judge</button>` : ''}
+      </div>
+    </div>
+    <div class="card">
+      ${tableWrap([
+        { key:'name',  label:'Name',       render: r => `<strong style="color:var(--text)">${r.name}</strong>` },
+        { key:'email', label:'Email',      render: r => `<span style="color:var(--info);font-size:12.5px">${r.email||'—'}</span>` },
+        { key:'contactNo', label:'Contact' },
+        { key:'courtRoom', label:'Court Room' },
+        { key:'caseIds', label:'Cases',   render: r => `<span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700">${(r.caseIds||[]).length}</span>` },
+        { key:'status', label:'Status',   render: r => badge(r.status) },
+        ...(canEdit ? [{ key:'_', label:'Actions', render: r => `<div style="display:flex;gap:6px"><button class="btn btn-sm btn-ghost" onclick='openJudgeForm(${r.id})'>Edit</button><button class="btn btn-sm btn-danger" onclick='openDeleteConfirm(${r.id},"${r.name}","judges","renderJudges")'>Delete</button></div>` }] : []),
+      ], filtered, 'No judges found. Add the first judge.')}
+    </div>`;
+}
+
+function filterJudges() {
+  const q = document.getElementById('judge-search')?.value?.toLowerCase() || '';
+  const filtered = judgesData.filter(j =>
+    (j.name||'').toLowerCase().includes(q) ||
+    (j.email||'').toLowerCase().includes(q) ||
+    (j.courtRoom||'').toLowerCase().includes(q)
+  );
+  document.querySelector('.card').innerHTML = tableWrap([
+    { key:'name', label:'Name', render: r => `<strong>${r.name}</strong>` },
+    { key:'email', label:'Email', render: r => `<span style="color:var(--info);font-size:12.5px">${r.email||'—'}</span>` },
+    { key:'contactNo', label:'Contact' },
+    { key:'courtRoom', label:'Court Room' },
+    { key:'caseIds', label:'Cases', render: r => `<span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700">${(r.caseIds||[]).length}</span>` },
+    { key:'status', label:'Status', render: r => badge(r.status) },
+    ...(state.role==='ADMIN' ? [{ key:'_', label:'Actions', render: r => `<div style="display:flex;gap:6px"><button class="btn btn-sm btn-ghost" onclick='openJudgeForm(${r.id})'>Edit</button><button class="btn btn-sm btn-danger" onclick='openDeleteConfirm(${r.id},"${r.name}","judges","renderJudges")'>Delete</button></div>` }] : []),
+  ], filtered, 'No judges found.');
+}
+
+function openJudgeForm(id) {
+  const judge = id ? judgesData.find(j=>j.id===id) : null;
+  document.getElementById('modal-title').textContent = judge ? 'Edit Judge' : 'Add Judge';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="form-grid">
+      <div class="form-group col-full"><label class="form-label">Full Name</label><input class="form-input" id="f-name" placeholder="Hon. Justice Name" value="${judge?.name||''}"/></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="f-email" placeholder="judge@court.gov" value="${judge?.email||''}"/></div>
+      <div class="form-group"><label class="form-label">Contact No</label><input class="form-input" id="f-contact" placeholder="+92 300 0000000" value="${judge?.contactNo||''}"/></div>
+      <div class="form-group"><label class="form-label">Court Room</label><input class="form-input" id="f-room" placeholder="Room A-1" value="${judge?.courtRoom||''}"/></div>
+      <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="f-status"><option value="">Select…</option>${statusOpts(USER_STATUSES)}</select></div>
+    </div>`;
+  if (judge) document.getElementById('f-status').value = judge.status||'ACTIVE';
+  else document.getElementById('f-status').value = 'ACTIVE';
+  state.modalSaveFn = async () => {
+    const body = { name:v('f-name'), email:v('f-email'), contactNo:v('f-contact'), courtRoom:v('f-room'), status:v('f-status') };
+    if (judge) await api('PUT', `/api/judges/${judge.id}`, body);
+    else await api('POST', '/api/judges', body);
+    toast(judge ? 'Judge updated' : 'Judge added');
+    closeModal('form-modal');
+    renderJudges();
+  };
+  openModal('form-modal');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  LAWYERS SECTION
+// ════════════════════════════════════════════════════════════════════════
+let lawyersData = [];
+async function renderLawyers() {
+  const canEdit = state.role === 'ADMIN';
+  const el = document.getElementById('main-content');
+  try {
+    lawyersData = await api('GET', '/api/lawyers');
+    renderLawyersTable(canEdit);
+  } catch(e) { el.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`; }
+}
+
+function renderLawyersTable(canEdit) {
+  const el = document.getElementById('main-content');
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">Lawyers</h2>
+      <div class="section-actions">
+        <div class="search-wrap"><span class="search-icon">🔍</span><input class="form-input" id="lawyer-search" placeholder="Search lawyers…" oninput="filterLawyers()"/></div>
+        ${canEdit ? `<button class="btn btn-navy" onclick="openLawyerForm()">+ Add Lawyer</button>` : ''}
+      </div>
+    </div>
+    <div class="card" id="lawyers-table">
+      ${buildLawyersTable(lawyersData, canEdit)}
+    </div>`;
+}
+
+function buildLawyersTable(data, canEdit) {
+  return tableWrap([
+    { key:'name', label:'Name', render: r => `<strong style="color:var(--text)">${r.name}</strong>` },
+    { key:'barNumber', label:'Bar No.', render: r => `<span class="code-badge">${r.barNumber||'—'}</span>` },
+    { key:'specialization', label:'Specialization' },
+    { key:'contactNo', label:'Contact' },
+    { key:'caseIds', label:'Cases', render: r => `<span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700">${(r.caseIds||[]).length}</span>` },
+    { key:'status', label:'Status', render: r => badge(r.status) },
+    ...(canEdit ? [{ key:'_', label:'Actions', render: r => `<div style="display:flex;gap:6px"><button class="btn btn-sm btn-ghost" onclick='openLawyerForm(${r.id})'>Edit</button><button class="btn btn-sm btn-danger" onclick='openDeleteConfirm(${r.id},"${r.name}","lawyers","renderLawyers")'>Delete</button></div>` }] : []),
+  ], data, 'No lawyers registered yet.');
+}
+
+function filterLawyers() {
+  const q = (document.getElementById('lawyer-search')?.value||'').toLowerCase();
+  const f = lawyersData.filter(l => (l.name||'').toLowerCase().includes(q)||(l.specialization||'').toLowerCase().includes(q)||(l.barNumber||'').toLowerCase().includes(q));
+  document.getElementById('lawyers-table').innerHTML = buildLawyersTable(f, state.role==='ADMIN');
+}
+
+function openLawyerForm(id) {
+  const l = id ? lawyersData.find(x=>x.id===id) : null;
+  document.getElementById('modal-title').textContent = l ? 'Edit Lawyer' : 'Add Lawyer';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="form-grid">
+      <div class="form-group col-full"><label class="form-label">Full Name</label><input class="form-input" id="f-name" placeholder="Advocate Name" value="${l?.name||''}"/></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="f-email" value="${l?.email||''}"/></div>
+      <div class="form-group"><label class="form-label">Contact No</label><input class="form-input" id="f-contact" value="${l?.contactNo||''}"/></div>
+      <div class="form-group"><label class="form-label">Bar Number</label><input class="form-input" id="f-bar" placeholder="BAR-00123" value="${l?.barNumber||''}"/></div>
+      <div class="form-group"><label class="form-label">Specialization</label><input class="form-input" id="f-spec" placeholder="Criminal Law" value="${l?.specialization||''}"/></div>
+      <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="f-status"><option value="">Select…</option>${statusOpts(USER_STATUSES)}</select></div>
+    </div>`;
+  if (l) document.getElementById('f-status').value = l.status||'ACTIVE';
+  else document.getElementById('f-status').value = 'ACTIVE';
+  state.modalSaveFn = async () => {
+    const body = { name:v('f-name'), email:v('f-email'), contactNo:v('f-contact'), barNumber:v('f-bar'), specialization:v('f-spec'), status:v('f-status') };
+    if (l) await api('PUT', `/api/lawyers/${l.id}`, body);
+    else await api('POST', '/api/lawyers', body);
+    toast(l ? 'Lawyer updated' : 'Lawyer added');
+    closeModal('form-modal');
+    renderLawyers();
+  };
+  openModal('form-modal');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  CLIENTS SECTION
+// ════════════════════════════════════════════════════════════════════════
+let clientsData = [];
+async function renderClients() {
+  const canEdit = ['ADMIN','LAWYER'].includes(state.role);
+  const el = document.getElementById('main-content');
+  try {
+    clientsData = await api('GET', '/api/clients');
+    renderClientsTable(canEdit);
+  } catch(e) { el.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`; }
+}
+
+function renderClientsTable(canEdit) {
+  const el = document.getElementById('main-content');
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">Clients</h2>
+      <div class="section-actions">
+        <div class="search-wrap"><span class="search-icon">🔍</span><input class="form-input" id="client-search" placeholder="Search clients…" oninput="filterClients()"/></div>
+        ${canEdit ? `<button class="btn btn-navy" onclick="openClientForm()">+ Add Client</button>` : ''}
+      </div>
+    </div>
+    <div class="card" id="clients-table">
+      ${buildClientsTable(clientsData, canEdit)}
+    </div>`;
+}
+
+function buildClientsTable(data, canEdit) {
+  return tableWrap([
+    { key:'name', label:'Name', render: r => `<strong style="color:var(--text)">${r.name}</strong>` },
+    { key:'cnicNumber', label:'CNIC', render: r => `<span class="code-badge">${r.cnicNumber||'—'}</span>` },
+    { key:'email', label:'Email', render: r => `<span style="color:var(--info);font-size:12.5px">${r.email||'—'}</span>` },
+    { key:'contactNo', label:'Contact' },
+    { key:'caseIds', label:'Cases', render: r => `<span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700">${(r.caseIds||[]).length}</span>` },
+    { key:'status', label:'Status', render: r => badge(r.status) },
+    ...(canEdit ? [{ key:'_', label:'Actions', render: r => `<div style="display:flex;gap:6px"><button class="btn btn-sm btn-ghost" onclick='openClientForm(${r.id})'>Edit</button><button class="btn btn-sm btn-danger" onclick='openDeleteConfirm(${r.id},"${r.name}","clients","renderClients")'>Delete</button></div>` }] : []),
+  ], data, 'No clients registered yet.');
+}
+
+function filterClients() {
+  const q = (document.getElementById('client-search')?.value||'').toLowerCase();
+  const f = clientsData.filter(c => (c.name||'').toLowerCase().includes(q)||(c.cnicNumber||'').includes(q)||(c.email||'').toLowerCase().includes(q));
+  document.getElementById('clients-table').innerHTML = buildClientsTable(f, ['ADMIN','LAWYER'].includes(state.role));
+}
+
+function openClientForm(id) {
+  const c = id ? clientsData.find(x=>x.id===id) : null;
+  document.getElementById('modal-title').textContent = c ? 'Edit Client' : 'Add Client';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="form-grid">
+      <div class="form-group col-full"><label class="form-label">Full Name</label><input class="form-input" id="f-name" placeholder="Client Name" value="${c?.name||''}"/></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="f-email" value="${c?.email||''}"/></div>
+      <div class="form-group"><label class="form-label">Contact No</label><input class="form-input" id="f-contact" value="${c?.contactNo||''}"/></div>
+      <div class="form-group"><label class="form-label">CNIC Number</label><input class="form-input" id="f-cnic" placeholder="35202-0000000-0" value="${c?.cnicNumber||''}"/></div>
+      <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="f-status"><option value="">Select…</option>${statusOpts(USER_STATUSES)}</select></div>
+    </div>`;
+  if (c) document.getElementById('f-status').value = c.status||'ACTIVE';
+  else document.getElementById('f-status').value = 'ACTIVE';
+  state.modalSaveFn = async () => {
+    const body = { name:v('f-name'), email:v('f-email'), contactNo:v('f-contact'), cnicNumber:v('f-cnic'), status:v('f-status') };
+    if (c) await api('PUT', `/api/clients/${c.id}`, body);
+    else await api('POST', '/api/clients', body);
+    toast(c ? 'Client updated' : 'Client added');
+    closeModal('form-modal');
+    renderClients();
+  };
+  openModal('form-modal');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  CASES SECTION
+// ════════════════════════════════════════════════════════════════════════
+let casesData = [], casesJudges = [], casesLawyers = [], casesClients = [];
+let caseEndpoint, caseCanCreate, caseCanEdit, caseCanDelete;
+
+async function renderCases(endpoint, title, canCreate, canEdit, canDelete) {
+  caseEndpoint = endpoint; caseCanCreate = canCreate; caseCanEdit = canEdit; caseCanDelete = canDelete;
+  const el = document.getElementById('main-content');
+  try {
+    const results = await Promise.allSettled([
+      api('GET', endpoint),
+      api('GET', '/api/judges'),
+      api('GET', '/api/lawyers'),
+      api('GET', '/api/clients'),
+    ]);
+    casesData    = results[0].status==='fulfilled' ? results[0].value : [];
+    casesJudges  = results[1].status==='fulfilled' ? results[1].value : [];
+    casesLawyers = results[2].status==='fulfilled' ? results[2].value : [];
+    casesClients = results[3].status==='fulfilled' ? results[3].value : [];
+    renderCasesTable(title, canCreate, canEdit, canDelete);
+  } catch(e) { el.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`; }
+}
+
+function renderCasesTable(title, canCreate, canEdit, canDelete) {
+  const el = document.getElementById('main-content');
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">${title}</h2>
+      <div class="section-actions">
+        <div class="search-wrap"><span class="search-icon">🔍</span><input class="form-input" id="case-search" placeholder="Search cases…" oninput="filterCases()"/></div>
+        <select class="form-select" id="case-status-filter" onchange="filterCases()" style="width:150px">
+          <option value="">All statuses</option>${statusOpts(CASE_STATUSES)}
+        </select>
+        ${canCreate ? `<button class="btn btn-navy" onclick="openCaseForm()">+ File Case</button>` : ''}
+      </div>
+    </div>
+    <div class="card" id="cases-table">
+      ${buildCasesTable(casesData, canEdit, canDelete)}
+    </div>`;
+}
+
+function buildCasesTable(data, canEdit, canDelete) {
+  return tableWrap([
+    { key:'caseId', label:'#', render: r => `<span style="font-family:'Playfair Display',serif;font-weight:700;color:var(--muted)">#${r.caseId}</span>` },
+    { key:'title', label:'Title', render: r => `<span style="font-weight:600;color:var(--text)">${r.title}</span>` },
+    { key:'clientName', label:'Client' },
+    { key:'judgeName', label:'Judge', render: r => r.judgeName||`<span style="color:var(--muted)">—</span>` },
+    { key:'lawyerName', label:'Lawyer', render: r => r.lawyerName||`<span style="color:var(--muted)">—</span>` },
+    { key:'filingDate', label:'Filed', render: r => r.filingDate ? `<span style="font-size:12px">${r.filingDate}</span>` : '—' },
+    { key:'status', label:'Status', render: r => badge(r.status) },
+    { key:'_', label:'', render: r => `<div style="display:flex;gap:6px">
+      <button class="btn btn-sm btn-ghost" onclick='viewCaseDetail(${r.caseId})'>View</button>
+      ${canEdit ? `<button class="btn btn-sm btn-ghost" onclick='openCaseForm(${r.caseId})'>Edit</button>` : ''}
+      ${canDelete ? `<button class="btn btn-sm btn-danger" onclick='openDeleteConfirm(${r.caseId},"${r.title}","cases","reloadCases")'>Delete</button>` : ''}
+    </div>` },
+  ], data, 'No cases found.');
+}
+
+function filterCases() {
+  const q = (document.getElementById('case-search')?.value||'').toLowerCase();
+  const s = document.getElementById('case-status-filter')?.value||'';
+  const f = casesData.filter(c =>
+    (!q || (c.title||'').toLowerCase().includes(q)||(c.clientName||'').toLowerCase().includes(q)||(c.judgeName||'').toLowerCase().includes(q)||(c.lawyerName||'').toLowerCase().includes(q)) &&
+    (!s || c.status===s)
+  );
+  document.getElementById('cases-table').innerHTML = buildCasesTable(f, caseCanEdit, caseCanDelete);
+}
+
+function reloadCases() { renderCases(caseEndpoint, PAGE_TITLES[state.active]||'Cases', caseCanCreate, caseCanEdit, caseCanDelete); }
+
+function viewCaseDetail(id) {
+  const c = casesData.find(x=>x.caseId===id);
+  if (!c) return;
+  document.getElementById('case-detail-body').innerHTML = `
+    <div style="background:#FAFAF8;border-radius:8px;padding:14px 16px;border:1px solid var(--border);margin-bottom:16px">
+      <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px">${c.title}</div>
+      ${badge(c.status)}
+    </div>
+    ${c.description ? `<p style="font-size:13.5px;color:var(--muted);line-height:1.7;margin-bottom:16px">${c.description}</p>` : ''}
+    <div class="info-grid">
+      ${[['Client',c.clientName],['CNIC',c.clientCnic],['Judge',c.judgeName],['Lawyer',c.lawyerName],['Filed',c.filingDate],['Case ID',`#${c.caseId}`]].map(([l,val])=>`
+        <div class="info-box">
+          <div class="info-box-label">${l}</div>
+          <div class="info-box-value">${val||'—'}</div>
+        </div>`).join('')}
+    </div>`;
+  openModal('case-detail-modal');
+}
+
+function openCaseForm(id) {
+  const c = id ? casesData.find(x=>x.caseId===id) : null;
+  document.getElementById('modal-title').textContent = c ? 'Edit Case' : 'File New Case';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="form-grid">
+      <div class="form-group col-full"><label class="form-label">Case Title</label><input class="form-input" id="f-title" placeholder="State vs. Defendant" value="${c?.title||''}"/></div>
+      <div class="form-group col-full"><label class="form-label">Description</label><textarea class="form-textarea" id="f-desc" placeholder="Case details…" rows="3">${c?.description||''}</textarea></div>
+      <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="f-status"><option value="">Select…</option>${statusOpts(CASE_STATUSES)}</select></div>
+      <div class="form-group"><label class="form-label">Filing Date</label><input class="form-input" type="date" id="f-date" value="${c?.filingDate||''}"/></div>
+      <div class="form-group"><label class="form-label">Client</label><select class="form-select" id="f-client">${entityOpts(casesClients,'Select client')}</select></div>
+      <div class="form-group"><label class="form-label">Judge</label><select class="form-select" id="f-judge">${entityOpts(casesJudges,'Select judge')}</select></div>
+      <div class="form-group col-full"><label class="form-label">Lawyer</label><select class="form-select" id="f-lawyer">${entityOpts(casesLawyers,'Select lawyer')}</select></div>
+    </div>`;
+  if (c) {
+    document.getElementById('f-status').value = c.status||'PENDING';
+    if (c.clientId) document.getElementById('f-client').value = c.clientId;
+    if (c.judgeId)  document.getElementById('f-judge').value  = c.judgeId;
+    if (c.lawyerId) document.getElementById('f-lawyer').value = c.lawyerId;
+  } else {
+    document.getElementById('f-status').value = 'PENDING';
+  }
+  state.modalSaveFn = async () => {
+    const body = {
+      title:v('f-title'), description:v('f-desc'), status:v('f-status'),
+      filingDate:v('f-date')||null,
+      clientId: n('f-client'), judgeId: n('f-judge'), lawyerId: n('f-lawyer'),
+    };
+    if (c) await api('PUT', `/api/cases/${c.caseId}`, body);
+    else await api('POST', '/api/cases', body);
+    toast(c ? 'Case updated' : 'Case filed');
+    closeModal('form-modal');
+    reloadCases();
+  };
+  openModal('form-modal');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  ACCOUNTS SECTION
+// ════════════════════════════════════════════════════════════════════════
+async function renderAccounts() {
+  const el = document.getElementById('main-content');
+  try {
+    const [js, ls, cs] = await Promise.allSettled([
+      api('GET','/api/judges'), api('GET','/api/lawyers'), api('GET','/api/clients')
+    ]);
+    state.cachedJudges  = js.status==='fulfilled' ? js.value : [];
+    state.cachedLawyers = ls.status==='fulfilled' ? ls.value : [];
+    state.cachedClients = cs.status==='fulfilled' ? cs.value : [];
+
+    el.innerHTML = `
+      <div class="section-header">
+        <h2 class="section-title">Login Accounts</h2>
+        <button class="btn btn-navy" onclick="openAccountModal()">+ Create Account</button>
+      </div>
+      <div class="hint-box">
+        <div class="hint-title">💡 How account creation works</div>
+        <div class="hint-body">First add judges, lawyers, and clients through their sections. Then come here to create a login account for them and link it to their profile. They will see their personalised dashboard on sign-in.</div>
+        <div class="role-count-grid">
+          <div class="role-count-box">
+            <span style="font-size:16px;margin-right:6px">👨‍⚖️</span><span style="font-size:12px;font-weight:700;color:var(--info)">JUDGE</span>
+            <div class="role-count-num">${state.cachedJudges.length}</div>
+            <div style="font-size:11px;color:var(--muted)">registered</div>
+          </div>
+          <div class="role-count-box">
+            <span style="font-size:16px;margin-right:6px">📋</span><span style="font-size:12px;font-weight:700;color:#6B30B0">LAWYER</span>
+            <div class="role-count-num">${state.cachedLawyers.length}</div>
+            <div style="font-size:11px;color:var(--muted)">registered</div>
+          </div>
+          <div class="role-count-box">
+            <span style="font-size:16px;margin-right:6px">👤</span><span style="font-size:12px;font-weight:700;color:var(--success)">CLIENT</span>
+            <div class="role-count-num">${state.cachedClients.length}</div>
+            <div style="font-size:11px;color:var(--muted)">registered</div>
+          </div>
+        </div>
+      </div>`;
+  } catch(e) { el.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`; }
+}
+
+function openAccountModal() {
+  document.getElementById('modal-title').textContent = 'Create Login Account';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="form-grid">
+      <div class="form-group col-full"><label class="form-label">Username</label><input class="form-input" id="f-user" placeholder="login_username"/></div>
+      <div class="form-group col-full"><label class="form-label">Password</label><input class="form-input" type="password" id="f-pass" placeholder="Minimum 6 characters"/></div>
+      <div class="form-group col-full">
+        <label class="form-label">Role</label>
+        <select class="form-select" id="f-role" onchange="toggleDomainSelect()">
+          <option value="">Select role…</option>
+          <option value="ADMIN">ADMIN</option>
+          <option value="JUDGE">JUDGE</option>
+          <option value="LAWYER">LAWYER</option>
+          <option value="CLIENT">CLIENT</option>
+        </select>
+      </div>
+      <div class="form-group col-full" id="domain-row" style="display:none">
+        <label class="form-label" id="domain-label">Link to profile</label>
+        <select class="form-select" id="f-domain"><option value="">Select…</option></select>
+      </div>
+      <div class="form-group col-full" style="padding:12px 14px;background:rgba(200,168,75,.08);border-radius:8px;border:1px solid rgba(200,168,75,.2)">
+        <span style="font-size:12.5px;color:var(--muted)">💡 Link the account to a Judge/Lawyer/Client record so they see their own data on login.</span>
+      </div>
+    </div>`;
+  state.modalSaveFn = async () => {
+    const role = v('f-role');
+    const body = { username:v('f-user'), password:v('f-pass'), role, domainEntityId: n('f-domain') };
+    await api('POST', '/api/auth/register', body);
+    toast('Account created successfully');
+    closeModal('form-modal');
+  };
+  openModal('form-modal');
+}
+
+function toggleDomainSelect() {
+  const role = document.getElementById('f-role').value;
+  const row = document.getElementById('domain-row');
+  const sel = document.getElementById('f-domain');
+  const lbl = document.getElementById('domain-label');
+  if (['JUDGE','LAWYER','CLIENT'].includes(role)) {
+    row.style.display = 'block';
+    lbl.textContent = `Link to ${role}`;
+    const opts = { JUDGE:state.cachedJudges, LAWYER:state.cachedLawyers, CLIENT:state.cachedClients };
+    sel.innerHTML = entityOpts(opts[role]||[], `Select ${role.toLowerCase()}`);
+  } else {
+    row.style.display = 'none';
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  DELETE
+// ════════════════════════════════════════════════════════════════════════
+function openDeleteConfirm(id, name, resource, reloadFn) {
+  document.getElementById('del-name').textContent = name;
+  state.deleteTarget = { id, resource, reloadFn };
+  openModal('del-modal');
+}
+
+async function confirmDelete() {
+  const { id, resource, reloadFn } = state.deleteTarget;
+  const idKey = resource === 'cases' ? 'caseId' : 'id';
+  try {
+    await api('DELETE', `/api/${resource}/${id}`);
+    toast(`${resource.slice(0,-1)} deleted`);
+    closeModal('del-modal');
+    window[reloadFn]();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  MODAL SAVE
+// ════════════════════════════════════════════════════════════════════════
+async function modalSave() {
+  const btn = document.getElementById('modal-save-btn');
+  btn.textContent = 'Saving…'; btn.disabled = true;
+  try {
+    await state.modalSaveFn();
+  } catch(e) {
+    toast(e.message || 'Save failed', 'error');
+  } finally {
+    btn.textContent = 'Save'; btn.disabled = false;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════════════════════════════════
+function v(id) { return (document.getElementById(id)?.value||'').trim(); }
+function n(id) { const val = v(id); return val ? Number(val) : null; }
+
+// ════════════════════════════════════════════════════════════════════════
+//  RESTORE SESSION
+// ════════════════════════════════════════════════════════════════════════
+(function restoreSession() {
+  try {
+    const saved = sessionStorage.getItem('adalat');
+    if (saved) {
+      const d = JSON.parse(saved);
+      state.token = d.token; state.role = d.role;
+      state.username = d.username; state.domainId = d.domainId;
+      initApp();
+    }
+  } catch(e) { /* ignore */ }
+})();
+</script>
+</body>
+</html>

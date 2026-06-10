@@ -1,39 +1,39 @@
 package com.court.digitalcourtmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import jakarta.persistence.*;
-
 @Entity
 @Table(name = "clients")
-@JsonIdentityInfo(
-  generator = ObjectIdGenerators.PropertyGenerator.class,
-  property = "id"
-)
-public class Client extends User {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Client extends BaseUser {
 
-    private String CNICNumber;
+
+    @Column(name = "cnic_number")
+    private String cnicNumber;
 
     @Lob
+    @Column(name = "cnic_front_image", columnDefinition = "LONGBLOB")
     private byte[] cnicFrontImage;
 
     @Lob
+    @Column(name = "cnic_back_image", columnDefinition = "LONGBLOB")
     private byte[] cnicBackImage;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"client", "judgeAssigned", "lawyerAssigned"})
     private List<CourtCase> cases = new ArrayList<>();
 
     public String getCnicNumber() {
-        return CNICNumber;
+        return cnicNumber;
     }
 
     public void setCnicNumber(String cnicNumber) {
-        this.CNICNumber = cnicNumber;
+        this.cnicNumber = cnicNumber;
     }
 
     public byte[] getCnicFrontImage() {

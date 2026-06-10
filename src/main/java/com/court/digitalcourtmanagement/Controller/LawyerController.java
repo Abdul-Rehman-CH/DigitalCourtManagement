@@ -1,21 +1,16 @@
 package com.court.digitalcourtmanagement.Controller;
 
+import com.court.digitalcourtmanagement.dto.LawyerDTO;
+import com.court.digitalcourtmanagement.service.LawyerService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.court.digitalcourtmanagement.entity.Lawyer;
-import com.court.digitalcourtmanagement.service.LawyerService;
-
 @RestController
-@RequestMapping("/lawyers")
+@RequestMapping("/api/lawyers")
+// FIX: original LawyerController returned raw Lawyer entity (not DTO) — now uses LawyerDTO
 public class LawyerController {
 
     private final LawyerService lawyerService;
@@ -25,32 +20,39 @@ public class LawyerController {
     }
 
     @PostMapping
-    public Lawyer CreateLawyer(@RequestBody Lawyer lawyer) {
-        return lawyerService.CreateLawyer(lawyer);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<LawyerDTO> createLawyer(@RequestBody LawyerDTO dto) {
+        return ResponseEntity.ok(lawyerService.createLawyer(dto));
     }
 
     @GetMapping
-    public List<Lawyer> GetAllLawyers() {
-        return lawyerService.GetAllLawyers();
+    @PreAuthorize("hasAnyRole('ADMIN', 'JUDGE', 'CLIENT')")
+    public ResponseEntity<List<LawyerDTO>> getAllLawyers() {
+        return ResponseEntity.ok(lawyerService.getAllLawyers());
     }
 
     @GetMapping("/{id}")
-    public Lawyer GetLawyerById(@PathVariable Long id) {
-        return lawyerService.GetLawyerById(id);
+    @PreAuthorize("hasAnyRole('ADMIN', 'JUDGE', 'LAWYER', 'CLIENT')")
+    public ResponseEntity<LawyerDTO> getLawyerById(@PathVariable Long id) {
+        return ResponseEntity.ok(lawyerService.getLawyerById(id));
     }
 
     @PutMapping("/{id}")
-    public Lawyer UpdateLawyer(@PathVariable Long id, @RequestBody Lawyer lawyer) {
-        return lawyerService.UpdateLawyer(id, lawyer);
+    @PreAuthorize("hasAnyRole('ADMIN', 'LAWYER')")
+    public ResponseEntity<LawyerDTO> updateLawyer(@PathVariable Long id, @RequestBody LawyerDTO dto) {
+        return ResponseEntity.ok(lawyerService.updateLawyer(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public void DeleteLawyer(@PathVariable Long id) {
-        lawyerService.DeleteLawyer(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteLawyer(@PathVariable Long id) {
+        lawyerService.deleteLawyer(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/cases")
-    public List<?> GetAssignedCases(@PathVariable Long id) {
-        return lawyerService.GetAssignedCases(id);
+    @PreAuthorize("hasAnyRole('ADMIN', 'LAWYER', 'JUDGE')")
+    public ResponseEntity<List<?>> getAssignedCases(@PathVariable Long id) {
+        return ResponseEntity.ok(lawyerService.getAssignedCases(id));
     }
 }

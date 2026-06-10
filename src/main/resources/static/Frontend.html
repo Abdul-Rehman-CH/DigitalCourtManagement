@@ -413,24 +413,86 @@ tbody tr:hover td{background:#FAFAF8}
   </div>
   <div class="login-panel">
     <div class="login-card">
-      <div class="login-title">Sign in</div>
-      <div class="login-sub">Access your role-based dashboard</div>
-      <div id="login-error" style="display:none;background:var(--danger-lt);border:1px solid #F5C6C2;color:var(--danger);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px"></div>
-      <div class="form-group" style="margin-bottom:12px">
-        <label class="form-label" for="login-user">Username</label>
-        <input class="form-input" id="login-user" type="text" placeholder="Enter username" autocomplete="username"/>
+      <!-- Tab switcher -->
+      <div style="display:flex;gap:0;border:1.5px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:24px">
+        <button id="tab-signin" onclick="showTab('signin')" style="flex:1;padding:8px 0;font-size:13px;font-weight:600;border:none;cursor:pointer;background:var(--navy);color:#fff;transition:all .15s">Sign In</button>
+        <button id="tab-register" onclick="showTab('register')" style="flex:1;padding:8px 0;font-size:13px;font-weight:600;border:none;cursor:pointer;background:transparent;color:var(--muted);transition:all .15s">Register</button>
       </div>
-      <div class="form-group" style="margin-bottom:20px">
-        <label class="form-label" for="login-pass">Password</label>
-        <input class="form-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password"/>
+
+      <!-- SIGN IN PANEL -->
+      <div id="panel-signin">
+        <div class="login-title">Sign in</div>
+        <div class="login-sub">Access your role-based dashboard</div>
+        <div id="login-error" style="display:none;background:var(--danger-lt);border:1px solid #F5C6C2;color:var(--danger);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px"></div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label class="form-label" for="login-user">Username</label>
+          <input class="form-input" id="login-user" type="text" placeholder="Enter username" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()"/>
+        </div>
+        <div class="form-group" style="margin-bottom:20px">
+          <label class="form-label" for="login-pass">Password</label>
+          <input class="form-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password"/>
+        </div>
+        <button class="btn btn-navy btn-full" id="login-btn" onclick="doLogin()">Sign In →</button>
+        <div class="divider">Quick access demos</div>
+        <div class="demos-grid">
+          <div class="demo-chip" onclick="fillDemo('admin','admin123')"><span class="demo-chip-icon">⚖️</span><span class="demo-chip-label">Admin</span></div>
+          <div class="demo-chip" onclick="fillDemo('judge1','judge123')"><span class="demo-chip-icon">👨‍⚖️</span><span class="demo-chip-label">Judge</span></div>
+          <div class="demo-chip" onclick="fillDemo('lawyer1','lawyer123')"><span class="demo-chip-icon">📋</span><span class="demo-chip-label">Lawyer</span></div>
+          <div class="demo-chip" onclick="fillDemo('client1','client123')"><span class="demo-chip-icon">👤</span><span class="demo-chip-label">Client</span></div>
+        </div>
       </div>
-      <button class="btn btn-navy btn-full" id="login-btn" onclick="doLogin()">Sign In →</button>
-      <div class="divider">Quick access demos</div>
-      <div class="demos-grid">
-        <div class="demo-chip" onclick="fillDemo('admin','admin123')"><span class="demo-chip-icon">⚖️</span><span class="demo-chip-label">Admin</span></div>
-        <div class="demo-chip" onclick="fillDemo('judge1','judge123')"><span class="demo-chip-icon">👨‍⚖️</span><span class="demo-chip-label">Judge</span></div>
-        <div class="demo-chip" onclick="fillDemo('lawyer1','lawyer123')"><span class="demo-chip-icon">📋</span><span class="demo-chip-label">Lawyer</span></div>
-        <div class="demo-chip" onclick="fillDemo('client1','client123')"><span class="demo-chip-icon">👤</span><span class="demo-chip-label">Client</span></div>
+
+      <!-- REGISTER PANEL -->
+      <div id="panel-register" style="display:none">
+        <div class="login-title">Create Account</div>
+        <div class="login-sub">Register with your role to get started</div>
+        <div id="reg-error" style="display:none;background:var(--danger-lt);border:1px solid #F5C6C2;color:var(--danger);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px"></div>
+        <div id="reg-success" style="display:none;background:var(--success-lt);border:1px solid #b2dfca;color:var(--success);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px"></div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label class="form-label" for="reg-user">Username</label>
+          <input class="form-input" id="reg-user" type="text" placeholder="Choose a username" autocomplete="off"/>
+        </div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label class="form-label" for="reg-pass">Password</label>
+          <input class="form-input" id="reg-pass" type="password" placeholder="Minimum 6 characters"/>
+        </div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label class="form-label" for="reg-pass2">Confirm Password</label>
+          <input class="form-input" id="reg-pass2" type="password" placeholder="Repeat password"/>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" for="reg-role">Role</label>
+          <select class="form-select" id="reg-role" onchange="onRegRoleChange()">
+            <option value="">Select your role…</option>
+            <option value="CLIENT">CLIENT — Party in a case</option>
+            <option value="LAWYER">LAWYER — Legal advocate</option>
+            <option value="JUDGE">JUDGE — Court justice</option>
+          </select>
+        </div>
+        <div id="reg-client-fields" style="display:none;border-top:1px solid var(--border);padding-top:14px;margin-bottom:16px">
+          <div style="font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:10px">Your Profile</div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" for="reg-name">Full Name *</label>
+            <input class="form-input" id="reg-name" type="text" placeholder="Your full legal name"/>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" for="reg-cnic">CNIC Number</label>
+            <input class="form-input" id="reg-cnic" type="text" placeholder="35202-0000000-0"/>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label" for="reg-contact">Contact No</label>
+            <input class="form-input" id="reg-contact" type="text" placeholder="+92 300 0000000"/>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="reg-email">Email</label>
+            <input class="form-input" id="reg-email" type="email" placeholder="you@example.com"/>
+          </div>
+        </div>
+        <div id="reg-approval-note" style="display:none;padding:12px 14px;background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.25);border-radius:8px;margin-bottom:16px">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">⏳ Admin approval required</div>
+          <div style="font-size:12.5px;color:var(--muted);line-height:1.6">Your account will be created, but an admin must link it to your judge/lawyer profile before you can access your dashboard.</div>
+        </div>
+        <button class="btn btn-gold btn-full" id="reg-btn" onclick="doRegister()">Create Account →</button>
       </div>
     </div>
   </div>
@@ -567,7 +629,9 @@ async function api(method, path, body = null) {
     throw new Error(txt || `HTTP ${res.status}`);
   }
   if (res.status === 204) return null;
-  return res.json();
+  const ct = res.headers.get('content-type') || '';
+  if (ct.includes('application/json')) return res.json();
+  return res.text();
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -637,6 +701,7 @@ function doLogout() {
   state = { token:null, role:null, username:null, domainId:null, active:'dashboard', deleteTarget:null, deleteEndpoint:null, deleteCallback:null, modalSaveFn:null, cachedJudges:[], cachedLawyers:[], cachedClients:[] };
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-page').style.display = 'grid';
+  showTab('signin');
   document.getElementById('login-user').value = '';
   document.getElementById('login-pass').value = '';
   document.getElementById('login-btn').textContent = 'Sign In →';
@@ -717,7 +782,7 @@ function renderPage(page) {
     case 'my-cases':
       if (state.role === 'JUDGE')  renderCases(`/api/cases/by-judge/${state.domainId}`, 'My Cases', false, true, false);
       else if (state.role === 'LAWYER') renderCases(`/api/cases/by-lawyer/${state.domainId}`, 'My Cases', true, true, false);
-      else renderCases(`/api/cases/by-client/${state.domainId}`, 'My Cases', false, false, false);
+      else renderCases(`/api/cases/by-client/${state.domainId}`, 'My Cases', true, true, false);
       break;
     case 'accounts':  renderAccounts(); break;
   }
@@ -1014,7 +1079,7 @@ function renderJudgesTable(data, canEdit) {
         ${canEdit ? `<button class="btn btn-navy" onclick="openJudgeForm()">+ Add Judge</button>` : ''}
       </div>
     </div>
-    <div class="card">
+    <div class="card" id="judges-table-wrap">
       ${tableWrap([
         { key:'name',  label:'Name',       render: r => `<strong style="color:var(--text)">${r.name}</strong>` },
         { key:'email', label:'Email',      render: r => `<span style="color:var(--info);font-size:12.5px">${r.email||'—'}</span>` },
@@ -1034,7 +1099,7 @@ function filterJudges() {
     (j.email||'').toLowerCase().includes(q) ||
     (j.courtRoom||'').toLowerCase().includes(q)
   );
-  document.querySelector('.card').innerHTML = tableWrap([
+  document.getElementById('judges-table-wrap').innerHTML = tableWrap([
     { key:'name', label:'Name', render: r => `<strong>${r.name}</strong>` },
     { key:'email', label:'Email', render: r => `<span style="color:var(--info);font-size:12.5px">${r.email||'—'}</span>` },
     { key:'contactNo', label:'Contact' },
@@ -1302,34 +1367,71 @@ function viewCaseDetail(id) {
 
 function openCaseForm(id) {
   const c = id ? casesData.find(x=>x.caseId===id) : null;
+  const isClient = state.role === 'CLIENT';
+  const isNew    = !c;
+
   document.getElementById('modal-title').textContent = c ? 'Edit Case' : 'File New Case';
+
+  // Judge row: on new cases show "will be auto-assigned"; on existing show who was assigned (read-only)
+  const judgeRow = isNew
+    ? `<div class="form-group col-full">
+         <label class="form-label">Judge</label>
+         <div style="padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;background:#FAFAF8;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px">
+           <span>⚡</span><span>Will be auto-assigned to the judge with the lightest caseload</span>
+         </div>
+       </div>`
+    : `<div class="form-group col-full">
+         <label class="form-label">Assigned Judge</label>
+         <div style="padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;background:#FAFAF8;font-size:13px;color:var(--text);display:flex;align-items:center;gap:8px">
+           <span>👨‍⚖️</span><span>${c.judgeName || 'Not yet assigned'}</span>
+         </div>
+       </div>`;
+
+  // Client row: clients file for themselves; admin/lawyer pick from list
+  const clientRow = isClient
+    ? '' // client is set server-side from their domainId
+    : `<div class="form-group"><label class="form-label">Client</label><select class="form-select" id="f-client">${entityOpts(casesClients,'Select client')}</select></div>`;
+
+  // Status row: clients don't set status manually
+  const statusRow = isClient
+    ? ''
+    : `<div class="form-group"><label class="form-label">Status</label><select class="form-select" id="f-status"><option value="">Select…</option>${statusOpts(CASE_STATUSES)}</select></div>`;
+
   document.getElementById('modal-body').innerHTML = `
     <div class="form-grid">
       <div class="form-group col-full"><label class="form-label">Case Title</label><input class="form-input" id="f-title" placeholder="State vs. Defendant" value="${c?.title||''}"/></div>
       <div class="form-group col-full"><label class="form-label">Description</label><textarea class="form-textarea" id="f-desc" placeholder="Case details…" rows="3">${c?.description||''}</textarea></div>
-      <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="f-status"><option value="">Select…</option>${statusOpts(CASE_STATUSES)}</select></div>
+      ${statusRow}
       <div class="form-group"><label class="form-label">Filing Date</label><input class="form-input" type="date" id="f-date" value="${c?.filingDate||''}"/></div>
-      <div class="form-group"><label class="form-label">Client</label><select class="form-select" id="f-client">${entityOpts(casesClients,'Select client')}</select></div>
-      <div class="form-group"><label class="form-label">Judge</label><select class="form-select" id="f-judge">${entityOpts(casesJudges,'Select judge')}</select></div>
-      <div class="form-group col-full"><label class="form-label">Lawyer</label><select class="form-select" id="f-lawyer">${entityOpts(casesLawyers,'Select lawyer')}</select></div>
+      ${clientRow}
+      ${judgeRow}
+      <div class="form-group col-full">
+        <label class="form-label">Lawyer <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">(chosen by client)</span></label>
+        <select class="form-select" id="f-lawyer">${entityOpts(casesLawyers,'Select lawyer — optional')}</select>
+      </div>
     </div>`;
+
   if (c) {
-    document.getElementById('f-status').value = c.status||'PENDING';
-    if (c.clientId) document.getElementById('f-client').value = c.clientId;
-    if (c.judgeId)  document.getElementById('f-judge').value  = c.judgeId;
+    if (!isClient && document.getElementById('f-status')) document.getElementById('f-status').value = c.status||'PENDING';
+    if (!isClient && document.getElementById('f-client') && c.clientId) document.getElementById('f-client').value = c.clientId;
     if (c.lawyerId) document.getElementById('f-lawyer').value = c.lawyerId;
   } else {
-    document.getElementById('f-status').value = 'PENDING';
+    if (!isClient && document.getElementById('f-status')) document.getElementById('f-status').value = 'PENDING';
   }
+
   state.modalSaveFn = async () => {
     const body = {
-      title:v('f-title'), description:v('f-desc'), status:v('f-status'),
-      filingDate:v('f-date')||null,
-      clientId: n('f-client'), judgeId: n('f-judge'), lawyerId: n('f-lawyer'),
+      title:       v('f-title'),
+      description: v('f-desc'),
+      status:      (!isClient && document.getElementById('f-status')) ? v('f-status') : 'PENDING',
+      filingDate:  v('f-date') || null,
+      clientId:    isClient ? state.domainId : n('f-client'),
+      lawyerId:    n('f-lawyer'),
+      // judgeId intentionally omitted — backend auto-assigns on creation
     };
     if (c) await api('PUT', `/api/cases/${c.caseId}`, body);
-    else await api('POST', '/api/cases', body);
-    toast(c ? 'Case updated' : 'Case filed');
+    else   await api('POST', '/api/cases', body);
+    toast(c ? 'Case updated' : 'Case filed successfully — judge auto-assigned');
     closeModal('form-modal');
     reloadCases();
   };
@@ -1467,6 +1569,78 @@ async function modalSave() {
 // ════════════════════════════════════════════════════════════════════════
 function v(id) { return (document.getElementById(id)?.value||'').trim(); }
 function n(id) { const val = v(id); return val ? Number(val) : null; }
+
+// ════════════════════════════════════════════════════════════════════════
+//  TAB SWITCHING (Login / Register)
+// ════════════════════════════════════════════════════════════════════════
+function showTab(tab) {
+  const isSignin = tab === 'signin';
+  document.getElementById('panel-signin').style.display   = isSignin  ? 'block' : 'none';
+  document.getElementById('panel-register').style.display = !isSignin ? 'block' : 'none';
+  document.getElementById('tab-signin').style.background    = isSignin  ? 'var(--navy)' : 'transparent';
+  document.getElementById('tab-signin').style.color         = isSignin  ? '#fff' : 'var(--muted)';
+  document.getElementById('tab-register').style.background  = !isSignin ? 'var(--navy)' : 'transparent';
+  document.getElementById('tab-register').style.color       = !isSignin ? '#fff' : 'var(--muted)';
+  // Clear errors on switch
+  ['login-error','reg-error','reg-success'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  REGISTER
+// ════════════════════════════════════════════════════════════════════════
+function onRegRoleChange() {
+  const role = document.getElementById('reg-role').value;
+  document.getElementById('reg-client-fields').style.display  = role === 'CLIENT' ? 'block' : 'none';
+  document.getElementById('reg-approval-note').style.display  = (role === 'JUDGE' || role === 'LAWYER') ? 'block' : 'none';
+}
+
+async function doRegister() {
+  const username = (document.getElementById('reg-user')?.value||'').trim();
+  const password = document.getElementById('reg-pass')?.value||'';
+  const confirm  = document.getElementById('reg-pass2')?.value||'';
+  const role     = document.getElementById('reg-role')?.value||'';
+  const errEl    = document.getElementById('reg-error');
+  const okEl     = document.getElementById('reg-success');
+  const btn      = document.getElementById('reg-btn');
+
+  errEl.style.display = 'none'; okEl.style.display = 'none';
+
+  if (!username) { errEl.textContent = 'Username is required.'; errEl.style.display = 'block'; return; }
+  if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; errEl.style.display = 'block'; return; }
+  if (password !== confirm) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; }
+  if (!role) { errEl.textContent = 'Please select a role.'; errEl.style.display = 'block'; return; }
+
+  const body = { username, password, role };
+
+  if (role === 'CLIENT') {
+    const fullName = (document.getElementById('reg-name')?.value||'').trim();
+    if (!fullName) { errEl.textContent = 'Full name is required.'; errEl.style.display = 'block'; return; }
+    body.fullName  = fullName;
+    body.cnicNumber = (document.getElementById('reg-cnic')?.value||'').trim() || null;
+    body.contactNo  = (document.getElementById('reg-contact')?.value||'').trim() || null;
+    body.email      = (document.getElementById('reg-email')?.value||'').trim() || null;
+  }
+
+  btn.textContent = 'Registering…'; btn.disabled = true;
+  try {
+    const msg = await api('POST', '/api/auth/register', body);
+    okEl.textContent = (typeof msg === 'string' ? msg : 'Account created!') + (role === 'CLIENT' ? ' You can now sign in.' : '');
+    okEl.style.display = 'block';
+    ['reg-user','reg-pass','reg-pass2','reg-name','reg-cnic','reg-contact','reg-email'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value='';
+    });
+    document.getElementById('reg-role').value = '';
+    onRegRoleChange();
+    if (role === 'CLIENT') setTimeout(() => showTab('signin'), 2000);
+  } catch(e) {
+    errEl.textContent = e.message || 'Registration failed. Try a different username.';
+    errEl.style.display = 'block';
+  } finally {
+    btn.textContent = 'Create Account →'; btn.disabled = false;
+  }
+}
 
 // ════════════════════════════════════════════════════════════════════════
 //  RESTORE SESSION

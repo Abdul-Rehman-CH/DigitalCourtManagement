@@ -43,6 +43,20 @@ public class CourtCaseServiceImpl implements CourtCaseService {
         c.setFilingDate(dto.getFilingDate());
         c.setClient(client);
 
+        // Auto-assign the judge with the fewest active cases
+        List<Judge> available = judgeRepository.findActiveJudgesOrderedByActiveCaseload();
+        if (available.isEmpty()) {
+            throw new RuntimeException("No active judges are available to be assigned. Please add an active judge first.");
+        }
+        c.setJudge(available.get(0));
+
+        // Lawyer is chosen by the client (optional at filing time)
+        if (dto.getLawyerId() != null) {
+            Lawyer lawyer = lawyerRepository.findById(dto.getLawyerId())
+                    .orElseThrow(() -> new RuntimeException("Lawyer not found"));
+            c.setLawyer(lawyer);
+        }
+
         return mappers.toDTO(caseRepository.save(c));
     }
 
@@ -67,6 +81,15 @@ public class CourtCaseServiceImpl implements CourtCaseService {
         c.setDescription(dto.getDescription());
         c.setStatus(dto.getStatus());
         c.setFilingDate(dto.getFilingDate());
+
+        // Allow updating lawyer assignment (client can change their lawyer)
+        if (dto.getLawyerId() != null) {
+            Lawyer lawyer = lawyerRepository.findById(dto.getLawyerId())
+                    .orElseThrow(() -> new RuntimeException("Lawyer not found"));
+            c.setLawyer(lawyer);
+        }
+
+        // Judge is never changed via update — auto-assigned at creation only
         return mappers.toDTO(caseRepository.save(c));
     }
 

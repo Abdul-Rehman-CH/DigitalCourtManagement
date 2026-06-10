@@ -19,7 +19,7 @@ public class CaseController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'LAWYER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'LAWYER', 'CLIENT')")
     public ResponseEntity<CourtCaseDTO> createCase(@RequestBody CourtCaseDTO dto) {
         return ResponseEntity.ok(caseService.createCase(dto));
     }
@@ -37,7 +37,7 @@ public class CaseController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'JUDGE', 'LAWYER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'JUDGE', 'LAWYER', 'CLIENT')")
     public ResponseEntity<CourtCaseDTO> updateCase(@PathVariable Long id, @RequestBody CourtCaseDTO dto) {
         return ResponseEntity.ok(caseService.updateCase(id, dto));
     }

@@ -3,6 +3,7 @@ package com.court.digitalcourtmanagement.dto;
 import java.util.List;
 
 public class JudgeDTO {
+
     private Long id;
     private String name;
     private String email;
@@ -11,26 +12,62 @@ public class JudgeDTO {
     private String courtRoom;
     private List<Long> caseIds;
 
-    public JudgeDTO() {}
+    public JudgeDTO() {
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getName() {
+        return name;
+    }
 
-    public String getContactNo() { return contactNo; }
-    public void setContactNo(String contactNo) { this.contactNo = contactNo; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public String getEmail() {
+        return email;
+    }
 
-    public String getCourtRoom() { return courtRoom; }
-    public void setCourtRoom(String courtRoom) { this.courtRoom = courtRoom; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public List<Long> getCaseIds() { return caseIds; }
-    public void setCaseIds(List<Long> caseIds) { this.caseIds = caseIds; }
+    public String getContactNo() {
+        return contactNo;
+    }
+
+    public void setContactNo(String contactNo) {
+        this.contactNo = contactNo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCourtRoom() {
+        return courtRoom;
+    }
+
+    public void setCourtRoom(String courtRoom) {
+        this.courtRoom = courtRoom;
+    }
+
+    public List<Long> getCaseIds() {
+        return caseIds;
+    }
+
+    public void setCaseIds(List<Long> caseIds) {
+        this.caseIds = caseIds;
+    }
 }

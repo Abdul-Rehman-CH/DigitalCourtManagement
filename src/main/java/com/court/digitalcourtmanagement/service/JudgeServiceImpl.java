@@ -31,8 +31,11 @@ public class JudgeServiceImpl implements JudgeService {
         j.setEmail(dto.getEmail());
         j.setContactNo(dto.getContactNo());
         j.setCourtRoom(dto.getCourtRoom());
-        if (dto.getStatus() != null) j.setStatus(Status.valueOf(dto.getStatus()));
-        else j.setStatus(Status.ACTIVE);
+        if (dto.getStatus() != null) {
+            j.setStatus(Status.valueOf(dto.getStatus())); 
+        }else {
+            j.setStatus(Status.ACTIVE);
+        }
         return mappers.toDTO(judgeRepository.save(j));
     }
 
@@ -57,7 +60,9 @@ public class JudgeServiceImpl implements JudgeService {
         j.setEmail(dto.getEmail());
         j.setContactNo(dto.getContactNo());
         j.setCourtRoom(dto.getCourtRoom());
-        if (dto.getStatus() != null) j.setStatus(Status.valueOf(dto.getStatus()));
+        if (dto.getStatus() != null) {
+            j.setStatus(Status.valueOf(dto.getStatus()));
+        }
         return mappers.toDTO(judgeRepository.save(j));
     }
 

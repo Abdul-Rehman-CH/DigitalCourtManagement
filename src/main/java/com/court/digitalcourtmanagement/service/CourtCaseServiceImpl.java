@@ -7,6 +7,7 @@ import com.court.digitalcourtmanagement.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,9 +21,9 @@ public class CourtCaseServiceImpl implements CourtCaseService {
     private final LawyerRepository lawyerRepository;
 
     public CourtCaseServiceImpl(CaseRepository caseRepository,
-                                ClientRepository clientRepository,
-                                JudgeRepository judgeRepository,
-                                LawyerRepository lawyerRepository) {
+            ClientRepository clientRepository,
+            JudgeRepository judgeRepository,
+            LawyerRepository lawyerRepository) {
         this.caseRepository = caseRepository;
         this.clientRepository = clientRepository;
         this.judgeRepository = judgeRepository;
@@ -31,7 +32,9 @@ public class CourtCaseServiceImpl implements CourtCaseService {
 
     @Override
     public CourtCaseDTO createCase(CourtCaseDTO dto) {
-        if (dto.getClientId() == null) throw new RuntimeException("Client ID is required");
+        if (dto.getClientId() == null) {
+            throw new RuntimeException("Client ID is required");
+        }
 
         Client client = clientRepository.findById(dto.getClientId())
                 .orElseThrow(() -> new RuntimeException("Client not found"));
@@ -79,8 +82,11 @@ public class CourtCaseServiceImpl implements CourtCaseService {
                 .orElseThrow(() -> new RuntimeException("Case not found with id: " + id));
         c.setTitle(dto.getTitle());
         c.setDescription(dto.getDescription());
-        c.setStatus(dto.getStatus());
+        // NOTE: Status is intentionally NOT updated here.
+        // Only judges may change case status via PATCH /{id}/status.
         c.setFilingDate(dto.getFilingDate());
+        // NOTE: hearingDate and closingRemarks are judge-only fields.
+        // They are never overwritten by a general PUT update.
 
         // Allow updating lawyer assignment (client can change their lawyer)
         if (dto.getLawyerId() != null) {
@@ -133,6 +139,30 @@ public class CourtCaseServiceImpl implements CourtCaseService {
     public List<CourtCaseDTO> getCasesByLawyer(Long lawyerId) {
         return caseRepository.findByLawyerAssigned_Id(lawyerId).stream()
                 .map(mappers::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public CourtCaseDTO updateHearingStatus(Long id, String status, String remarks) {
+        CourtCase c = caseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Case not found with id: " + id));
+        c.setStatus(status);
+        if (remarks != null && !remarks.isBlank()) {
+            c.setClosingRemarks(remarks);
+        }
+        return mappers.toDTO(caseRepository.save(c));
+    }
+
+    @Override
+    public CourtCaseDTO updateHearingSchedule(Long id, String hearingDate, String remarks) {
+        CourtCase c = caseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Case not found with id: " + id));
+        if (hearingDate != null && !hearingDate.isBlank()) {
+            c.setHearingDate(LocalDate.parse(hearingDate));
+        }
+        if (remarks != null && !remarks.isBlank()) {
+            c.setClosingRemarks(remarks);
+        }
+        return mappers.toDTO(caseRepository.save(c));
     }
 
     @Override

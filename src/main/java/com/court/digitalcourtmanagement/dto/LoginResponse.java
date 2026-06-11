@@ -1,6 +1,7 @@
 package com.court.digitalcourtmanagement.dto;
 
 public class LoginResponse {
+
     private String token;
     private String role;
     private String username;
@@ -13,8 +14,19 @@ public class LoginResponse {
         this.domainEntityId = domainEntityId;
     }
 
-    public String getToken() { return token; }
-    public String getRole() { return role; }
-    public String getUsername() { return username; }
-    public Long getDomainEntityId() { return domainEntityId; }
+    public String getToken() {
+        return token;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Long getDomainEntityId() {
+        return domainEntityId;
+    }
 }

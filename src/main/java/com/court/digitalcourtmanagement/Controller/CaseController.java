@@ -49,6 +49,22 @@ public class CaseController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('JUDGE')")                   
+    public ResponseEntity<CourtCaseDTO> updateHearingStatus(@PathVariable Long id,
+                                                             @RequestParam String status,
+                                                             @RequestParam(required = false) String remarks) {
+        return ResponseEntity.ok(caseService.updateHearingStatus(id, status, remarks));
+    }
+
+    @PatchMapping("/{id}/schedule")
+    @PreAuthorize("hasRole('JUDGE')")
+    public ResponseEntity<CourtCaseDTO> updateHearingSchedule(@PathVariable Long id,
+                                                               @RequestParam(required = false) String hearingDate,
+                                                               @RequestParam(required = false) String remarks) {
+        return ResponseEntity.ok(caseService.updateHearingSchedule(id, hearingDate, remarks));
+    }
+
     @PutMapping("/{caseId}/judge/{judgeId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'JUDGE')")
     public ResponseEntity<CourtCaseDTO> assignJudge(@PathVariable Long caseId, @PathVariable Long judgeId) {

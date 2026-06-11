@@ -23,7 +23,12 @@ public class CourtCase {
 
     private String status;
 
+    @Column(length = 2000)
+    private String closingRemarks;
+
     private LocalDate filingDate;
+
+    private LocalDate hearingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "judge_id")
@@ -64,6 +69,14 @@ public class CourtCase {
         this.description = description;
     }
 
+    public String getClosingRemarks() {
+        return closingRemarks;
+    }
+
+    public void setClosingRemarks(String closingRemarks) {
+        this.closingRemarks = closingRemarks;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -94,6 +107,14 @@ public class CourtCase {
 
     public void setLawyer(Lawyer lawyerAssigned) {
         this.lawyerAssigned = lawyerAssigned;
+    }
+
+    public LocalDate getHearingDate() {
+        return hearingDate;
+    }
+
+    public void setHearingDate(LocalDate hearingDate) {
+        this.hearingDate = hearingDate;
     }
 
     public Client getClient() {

@@ -5,11 +5,12 @@ import com.court.digitalcourtmanagement.entity.*;
 
 import java.util.stream.Collectors;
 
-
 public class mappers {
 
     public static JudgeDTO toDTO(Judge j) {
-        if (j == null) return null;
+        if (j == null) {
+            return null;
+        }
         JudgeDTO dto = new JudgeDTO();
         dto.setId(j.getId());
         dto.setName(j.getName());
@@ -24,7 +25,9 @@ public class mappers {
     }
 
     public static LawyerDTO toDTO(Lawyer l) {
-        if (l == null) return null;
+        if (l == null) {
+            return null;
+        }
         LawyerDTO dto = new LawyerDTO();
         dto.setId(l.getId());
         dto.setName(l.getName());
@@ -40,7 +43,9 @@ public class mappers {
     }
 
     public static ClientDTO toDTO(Client c) {
-        if (c == null) return null;
+        if (c == null) {
+            return null;
+        }
         ClientDTO dto = new ClientDTO();
         dto.setId(c.getId());
         dto.setName(c.getName());
@@ -55,13 +60,17 @@ public class mappers {
     }
 
     public static CourtCaseDTO toDTO(CourtCase c) {
-        if (c == null) return null;
+        if (c == null) {
+            return null;
+        }
         CourtCaseDTO dto = new CourtCaseDTO();
         dto.setCaseId(c.getCaseId());
         dto.setTitle(c.getTitle());
         dto.setDescription(c.getDescription());
         dto.setStatus(c.getStatus());
+        dto.setClosingRemarks(c.getClosingRemarks());
         dto.setFilingDate(c.getFilingDate());
+        dto.setHearingDate(c.getHearingDate());
         if (c.getClient() != null) {
             dto.setClientId(c.getClient().getId());
             dto.setClientName(c.getClient().getName());

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Table(name = "app_users")
 @Data
@@ -33,28 +32,36 @@ public class AppUser {
         this.role = role;
         this.domainEntityId = domainEntityId;
     }
-    public void setUsername(String us){
-        this.username=us;
+
+    public void setUsername(String us) {
+        this.username = us;
     }
-    public String getUsername(){
+
+    public String getUsername() {
         return this.username;
     }
-    public void setDomainEntityId (Long id){
-        this.domainEntityId=id;
+
+    public void setDomainEntityId(Long id) {
+        this.domainEntityId = id;
     }
-    public Long getDomainEntityId(){
+
+    public Long getDomainEntityId() {
         return this.domainEntityId;
     }
-    public void setRole(Role role){
-        this.role=role;
+
+    public void setRole(Role role) {
+        this.role = role;
     }
-    public Role getRole(){
+
+    public Role getRole() {
         return this.role;
     }
-    public void setPassword(String pass){
-        this.password=pass;
+
+    public void setPassword(String pass) {
+        this.password = pass;
     }
-    public String getPassword(){
+
+    public String getPassword() {
         return this.password;
     }
 }

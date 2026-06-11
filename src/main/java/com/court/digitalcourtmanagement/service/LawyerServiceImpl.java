@@ -32,8 +32,11 @@ public class LawyerServiceImpl implements LawyerService {
         l.setContactNo(dto.getContactNo());
         l.setBarNumber(dto.getBarNumber());
         l.setSpecialization(dto.getSpecialization());
-        if (dto.getStatus() != null) l.setStatus(Status.valueOf(dto.getStatus()));
-        else l.setStatus(Status.ACTIVE);
+        if (dto.getStatus() != null) {
+            l.setStatus(Status.valueOf(dto.getStatus())); 
+        }else {
+            l.setStatus(Status.ACTIVE);
+        }
         return mappers.toDTO(lawyerRepository.save(l));
     }
 
@@ -59,7 +62,9 @@ public class LawyerServiceImpl implements LawyerService {
         l.setContactNo(dto.getContactNo());
         l.setBarNumber(dto.getBarNumber());
         l.setSpecialization(dto.getSpecialization());
-        if (dto.getStatus() != null) l.setStatus(Status.valueOf(dto.getStatus()));
+        if (dto.getStatus() != null) {
+            l.setStatus(Status.valueOf(dto.getStatus()));
+        }
         return mappers.toDTO(lawyerRepository.save(l));
     }
 
@@ -71,7 +76,7 @@ public class LawyerServiceImpl implements LawyerService {
     @Override
     @Transactional(readOnly = true)
     public List<?> getAssignedCases(Long id) {
-       
+
         return caseRepository.findByLawyerAssigned_Id(id).stream()
                 .map(mappers::toDTO).collect(Collectors.toList());
     }

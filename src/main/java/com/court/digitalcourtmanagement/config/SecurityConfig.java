@@ -32,7 +32,7 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,
-                          UserDetailsServiceImpl userDetailsService) {
+            UserDetailsServiceImpl userDetailsService) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.userDetailsService = userDetailsService;
     }
@@ -40,12 +40,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
                 // Public endpoints
                 .requestMatchers("/api/auth/**", "/", "/index.html",
-                        "/login.html", "/css/**", "/js/**", "/images/**").permitAll()
+                        "/login.html", "/Frontend.html", "/css/**", "/js/**", "/images/**").permitAll()
                 // ADMIN only
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 // Judge dashboard
@@ -55,15 +55,15 @@ public class SecurityConfig {
                 // Client dashboard
                 .requestMatchers("/api/client/**").hasAnyRole("CLIENT", "ADMIN")
                 // General CRUD — ADMIN manages everything
-                .requestMatchers("/api/judges/**").hasAnyRole("ADMIN")
-                .requestMatchers("/api/lawyers/**").hasAnyRole("ADMIN", "JUDGE")
+                .requestMatchers("/api/judges/**").hasAnyRole("ADMIN", "JUDGE", "LAWYER", "CLIENT")
+                .requestMatchers("/api/lawyers/**").hasAnyRole("ADMIN", "JUDGE", "LAWYER", "CLIENT")
                 .requestMatchers("/api/clients/**").hasAnyRole("ADMIN", "LAWYER", "JUDGE")
                 .requestMatchers("/api/cases/**").hasAnyRole("ADMIN", "JUDGE", "LAWYER", "CLIENT")
                 .anyRequest().authenticated()
-            )
-            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                )
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -72,9 +72,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
+        config.setAllowCredentials(false);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;

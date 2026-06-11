@@ -80,7 +80,7 @@ public class AuthController {
 
         Long domainEntityId = request.getDomainEntityId();
 
-        // CLIENT: auto-create the Client profile in the same transaction
+    
         if (role == Role.CLIENT) {
             if (request.getFullName() == null || request.getFullName().isBlank()) {
                 return ResponseEntity.badRequest().body("Full name is required for client registration");

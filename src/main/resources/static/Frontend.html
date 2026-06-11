@@ -884,6 +884,16 @@ function actionBtns(editFn, deleteFn) {
 function statusOpts(statuses) {
   return statuses.map(s => `<option value="${s}">${s.replace(/_/g,' ')}</option>`).join('');
 }
+function toggleRemarksField() {
+  const row = document.getElementById('remarks-row');
+  if (!row) return;
+  // Judge form: remarks always visible
+  if (state.role === 'JUDGE') { row.style.display = ''; return; }
+  const sel = document.getElementById('f-status');
+  if (!sel) return;
+  const val = sel.value;
+  row.style.display = ['CLOSED','DISMISSED'].includes(val) ? '' : 'none';
+}
 function entityOpts(arr, placeholder) {
   return `<option value="">${placeholder}</option>` + (arr||[]).map(e => `<option value="${e.id}">${e.name}</option>`).join('');
 }
@@ -1099,6 +1109,7 @@ async function renderClientDashboard() {
             ${c.description ? `<p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px">${c.description.slice(0,200)}${c.description.length>200?'…':''}</p>` : ''}
             <div class="info-grid">
               <div class="info-box"><div class="info-box-label">Judge</div><div class="info-box-value">${c.judgeName||'Not assigned'}</div></div>
+              <div class="info-box"><div class="info-box-label">Next Hearing</div><div class="info-box-value">${c.hearingDate||'—'}</div></div>
               <div class="info-box"><div class="info-box-label">Lawyer</div><div class="info-box-value">${c.lawyerName||'Not assigned'}</div></div>
             </div>
           </div>`).join('')}`;
@@ -1381,6 +1392,7 @@ function buildCasesTable(data, canEdit, canDelete) {
     { key:'title', label:'Title', render: r => `<span style="font-weight:600;color:var(--text)">${r.title}</span>` },
     { key:'clientName', label:'Client' },
     { key:'judgeName', label:'Judge', render: r => r.judgeName||`<span style="color:var(--muted)">—</span>` },
+    { key:'hearingDate', label:'Next Hearing', render: r => r.hearingDate||`<span style="color:var(--muted)">—</span>` },
     { key:'lawyerName', label:'Lawyer', render: r => r.lawyerName||`<span style="color:var(--muted)">—</span>` },
     { key:'filingDate', label:'Filed', render: r => r.filingDate ? `<span style="font-size:12px">${r.filingDate}</span>` : '—' },
     { key:'status', label:'Status', render: r => badge(r.status) },
@@ -1419,7 +1431,8 @@ function viewCaseDetail(id) {
           <div class="info-box-label">${l}</div>
           <div class="info-box-value">${val||'—'}</div>
         </div>`).join('')}
-    </div>`;
+    </div>
+    ${c.closingRemarks ? `<div style="margin-top:14px;padding:12px 14px;background:rgba(200,50,50,.06);border:1px solid rgba(200,50,50,.2);border-radius:8px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--danger);margin-bottom:4px">Closing Remarks</div><div style="font-size:13.5px;color:var(--text);line-height:1.6">${c.closingRemarks}</div></div>` : ''}`;
   openModal('case-detail-modal');
 }
 
@@ -1429,7 +1442,7 @@ function openCaseForm(id) {
   const isNew    = !c;
 
   // Always fetch fresh — avoids stale/empty cache from earlier failed loads
-  document.getElementById('modal-title').textContent = c ? 'Edit Case' : 'File New Case';
+  document.getElementById('modal-title').textContent = state.role === 'JUDGE' ? 'Update Hearing Status' : (c ? 'Edit Case' : 'File New Case');
   document.getElementById('modal-body').innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div>';
   document.getElementById('modal-save-btn').disabled = true;
   openModal('form-modal');
@@ -1453,7 +1466,66 @@ function openCaseForm(id) {
 
 function _buildCaseFormBody(c, isClient, isNew) {
 
-  // Judge row: on new cases show "will be auto-assigned"; on existing show who was assigned (read-only)
+  const isJudge = state.role === 'JUDGE';
+
+  // ── JUDGE: hearing schedule + status form (JUDGE ONLY) ──────────────
+  if (isJudge) {
+    document.getElementById('modal-body').innerHTML = `
+      <div class="form-grid">
+        <div class="form-group col-full" style="background:#FAFAF8;border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px">Case</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text)">${c?.title||'—'}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Client: ${c?.clientName||'—'} · Filed: ${c?.filingDate||'—'}</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hearing Status
+            <span style="font-size:10px;background:rgba(26,111,168,.15);color:var(--info);padding:2px 7px;border-radius:99px;font-weight:700;margin-left:6px">JUDGE ONLY</span>
+          </label>
+          <select class="form-select" id="f-status" onchange="toggleRemarksField()">
+            <option value="">Select…</option>${statusOpts(CASE_STATUSES)}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Next Hearing Date
+            <span style="font-size:10px;background:rgba(26,111,168,.15);color:var(--info);padding:2px 7px;border-radius:99px;font-weight:700;margin-left:6px">JUDGE ONLY</span>
+          </label>
+          <input class="form-input" type="date" id="f-hearing-date" value="${c?.hearingDate||''}"/>
+        </div>
+        <div class="form-group col-full" id="remarks-row">
+          <label class="form-label">Remarks
+            <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0"> — required when closing or dismissing</span>
+          </label>
+          <textarea class="form-textarea" id="f-remarks" rows="3" placeholder="Enter remarks, adjournment reason, or closing notes…">${c?.closingRemarks||''}</textarea>
+        </div>
+      </div>`;
+    const statusEl = document.getElementById('f-status');
+    if (statusEl) { statusEl.value = c?.status || 'PENDING'; }
+
+    state.modalSaveFn = async () => {
+      const savedCaseId = c?.caseId ?? null;
+      if (!savedCaseId) { toast('No case selected.', 'error'); return; }
+      const newStatus = v('f-status');
+      if (!newStatus) { toast('Please select a status.', 'error'); return; }
+      const remarks = (document.getElementById('f-remarks')?.value || '').trim();
+      const hearingDate = (document.getElementById('f-hearing-date')?.value || '').trim();
+      if (['CLOSED','DISMISSED'].includes(newStatus) && !remarks) {
+        toast('Please enter remarks before closing or dismissing.', 'error');
+        return;
+      }
+      let patchUrl = `/api/cases/${savedCaseId}/status?status=${encodeURIComponent(newStatus)}`;
+      if (remarks) patchUrl += `&remarks=${encodeURIComponent(remarks)}`;
+      await api('PATCH', patchUrl);
+      if (hearingDate) {
+        await api('PATCH', `/api/cases/${savedCaseId}/schedule?hearingDate=${encodeURIComponent(hearingDate)}`);
+      }
+      toast('Hearing updated successfully');
+      closeModal('form-modal');
+      reloadCases();
+    };
+    return; // ← don't fall through to the non-judge form below
+  }
+
+  // ── NON-JUDGE form (ADMIN, LAWYER, CLIENT) ───────────────────────────
   const judgeRow = isNew
     ? `<div class="form-group col-full">
          <label class="form-label">Judge</label>
@@ -1473,10 +1545,10 @@ function _buildCaseFormBody(c, isClient, isNew) {
     ? '' // client is set server-side from their domainId
     : `<div class="form-group"><label class="form-label">Client</label><select class="form-select" id="f-client">${entityOpts(casesClients,'Select client')}</select></div>`;
 
-  // Status row: clients don't set status manually
-  const statusRow = isClient
-    ? ''
-    : `<div class="form-group"><label class="form-label">Status</label><select class="form-select" id="f-status"><option value="">Select…</option>${statusOpts(CASE_STATUSES)}</select></div>`;
+  // Status row: read-only for non-judges (judges are handled above via early return)
+  const statusRow = c
+    ? `<div class="form-group"><label class="form-label">Status</label><div style="padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;background:#FAFAF8;font-size:13px;color:var(--text)">${c.status||'PENDING'}</div></div>`
+    : '';
 
   document.getElementById('modal-body').innerHTML = `
     <div class="form-grid">
@@ -1505,25 +1577,23 @@ function _buildCaseFormBody(c, isClient, isNew) {
     </div>`;
 
   if (c) {
-    if (!isClient && document.getElementById('f-status')) document.getElementById('f-status').value = c.status||'PENDING';
-    if (!isClient && document.getElementById('f-client') && c.clientId) document.getElementById('f-client').value = c.clientId;
-    if (c.lawyerId) document.getElementById('f-lawyer').value = c.lawyerId;
-  } else {
-    if (!isClient && document.getElementById('f-status')) document.getElementById('f-status').value = 'PENDING';
+    if (document.getElementById('f-client') && c.clientId) document.getElementById('f-client').value = c.clientId;
+    if (document.getElementById('f-lawyer') && c.lawyerId) document.getElementById('f-lawyer').value = c.lawyerId;
   }
 
   state.modalSaveFn = async () => {
     const body = {
       title:       v('f-title'),
       description: v('f-desc'),
-      status:      (!isClient && document.getElementById('f-status')) ? v('f-status') : 'PENDING',
       filingDate:  v('f-date') || null,
       clientId:    isClient ? state.domainId : n('f-client'),
       lawyerId:    n('f-lawyer'),
-      // judgeId intentionally omitted — backend auto-assigns on creation
     };
-    if (c) await api('PUT', `/api/cases/${c.caseId}`, body);
-    else   await api('POST', '/api/cases', body);
+    if (c) {
+      await api('PUT', `/api/cases/${c.caseId}`, body);
+    } else {
+      await api('POST', '/api/cases', body);
+    }
     toast(c ? 'Case updated' : 'Case filed successfully — judge auto-assigned');
     closeModal('form-modal');
     reloadCases();

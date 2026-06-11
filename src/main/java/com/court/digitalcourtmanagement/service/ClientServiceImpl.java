@@ -30,8 +30,11 @@ public class ClientServiceImpl implements ClientService {
         c.setEmail(dto.getEmail());
         c.setContactNo(dto.getContactNo());
         c.setCnicNumber(dto.getCnicNumber());
-        if (dto.getStatus() != null) c.setStatus(Status.valueOf(dto.getStatus()));
-        else c.setStatus(Status.ACTIVE);
+        if (dto.getStatus() != null) {
+            c.setStatus(Status.valueOf(dto.getStatus())); 
+        }else {
+            c.setStatus(Status.ACTIVE);
+        }
         return mappers.toDTO(clientRepository.save(c));
     }
 
@@ -56,7 +59,9 @@ public class ClientServiceImpl implements ClientService {
         c.setEmail(dto.getEmail());
         c.setContactNo(dto.getContactNo());
         c.setCnicNumber(dto.getCnicNumber());
-        if (dto.getStatus() != null) c.setStatus(Status.valueOf(dto.getStatus()));
+        if (dto.getStatus() != null) {
+            c.setStatus(Status.valueOf(dto.getStatus()));
+        }
         return mappers.toDTO(clientRepository.save(c));
     }
 

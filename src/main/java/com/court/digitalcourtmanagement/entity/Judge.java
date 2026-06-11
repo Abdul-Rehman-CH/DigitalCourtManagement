@@ -14,7 +14,7 @@ public class Judge extends BaseUser {
 
     private String courtRoom;
 
-    // FIX: mappedBy must match field name in CourtCase ("judgeAssigned")
+ 
     @OneToMany(mappedBy = "judgeAssigned", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"judgeAssigned", "lawyerAssigned", "client"})
     private List<CourtCase> cases = new ArrayList<>();

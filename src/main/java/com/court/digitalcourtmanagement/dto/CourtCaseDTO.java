@@ -8,7 +8,9 @@ public class CourtCaseDTO {
     private String title;
     private String description;
     private String status;
+    private String closingRemarks;
     private LocalDate filingDate;
+    private LocalDate hearingDate;
     private Long clientId;
     private Long judgeId;
     private Long lawyerId;
@@ -44,6 +46,9 @@ public class CourtCaseDTO {
         this.description = description;
     }
 
+    public String getClosingRemarks() { return closingRemarks; }
+    public void setClosingRemarks(String closingRemarks) { this.closingRemarks = closingRemarks; }
+
     public String getStatus() {
         return status;
     }
@@ -58,6 +63,14 @@ public class CourtCaseDTO {
 
     public void setFilingDate(LocalDate filingDate) {
         this.filingDate = filingDate;
+    }
+
+    public LocalDate getHearingDate() {
+        return hearingDate;
+    }
+
+    public void setHearingDate(LocalDate hearingDate) {
+        this.hearingDate = hearingDate;
     }
 
     public Long getClientId() {

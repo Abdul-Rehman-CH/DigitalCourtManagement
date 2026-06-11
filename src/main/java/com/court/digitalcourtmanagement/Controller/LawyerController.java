@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/lawyers")
-// FIX: original LawyerController returned raw Lawyer entity (not DTO) — now uses LawyerDTO
+
 public class LawyerController {
 
     private final LawyerService lawyerService;

@@ -6,6 +6,11 @@
 <title>Adalat — Digital Court Management</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
+/* SVG icon sizing helper */
+.ico{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0}
+.ico svg{display:block}
+</style>
+<style>
 /* ═══════════════════════════════════════════
    RESET & TOKENS
 ═══════════════════════════════════════════ */
@@ -404,9 +409,9 @@ tbody tr:hover td{background:#FAFAF8}
 <div id="login-page">
   <div class="login-hero">
     <div class="hero-brand">
-      <div class="hero-brand-icon">⚖️</div>
+      <div class="hero-brand-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C8A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M5 6l7-3 7 3"/><path d="M4 10v11"/><path d="M20 10v11"/><path d="M8 14v3"/><path d="M12 14v3"/><path d="M16 14v3"/></svg></div>
       <div>
-        <div class="hero-brand-name">Adalat</div>
+        <div class="hero-brand-name">AbdulRehman 2025-CYS-42</div>
         <div class="hero-brand-sub">Digital Court Management</div>
       </div>
     </div>
@@ -445,10 +450,10 @@ tbody tr:hover td{background:#FAFAF8}
         <button class="btn btn-navy btn-full" id="login-btn" onclick="doLogin()">Sign In →</button>
         <div class="divider">Quick access demos</div>
         <div class="demos-grid">
-          <div class="demo-chip" onclick="fillDemo('admin','admin123')"><span class="demo-chip-icon">⚖️</span><span class="demo-chip-label">Admin</span></div>
-          <div class="demo-chip" onclick="fillDemo('judge1','judge123')"><span class="demo-chip-icon">👨‍⚖️</span><span class="demo-chip-label">Judge</span></div>
-          <div class="demo-chip" onclick="fillDemo('lawyer1','lawyer123')"><span class="demo-chip-icon">📋</span><span class="demo-chip-label">Lawyer</span></div>
-          <div class="demo-chip" onclick="fillDemo('client1','client123')"><span class="demo-chip-icon">👤</span><span class="demo-chip-label">Client</span></div>
+          <div class="demo-chip" onclick="fillDemo('admin','admin123')"><span class="demo-chip-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M3 9h18"/><path d="M3 9l4-4"/><path d="M21 9l-4-4"/><path d="M5 20h14"/><path d="M3 9c0 2.5 2 5 4 6"/><path d="M21 9c0 2.5-2 5-4 6"/></svg></span><span class="demo-chip-label">Admin</span></div>
+          <div class="demo-chip" onclick="fillDemo('judge1','judge123')"><span class="demo-chip-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/><path d="M8 14l-2 4h12l-2-4"/></svg></span><span class="demo-chip-label">Judge</span></div>
+          <div class="demo-chip" onclick="fillDemo('lawyer1','lawyer123')"><span class="demo-chip-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/></svg></span><span class="demo-chip-label">Lawyer</span></div>
+          <div class="demo-chip" onclick="fillDemo('client1','client123')"><span class="demo-chip-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></span><span class="demo-chip-label">Client</span></div>
         </div>
       </div>
 
@@ -542,7 +547,7 @@ tbody tr:hover td{background:#FAFAF8}
           </div>
         </div>
         <div id="reg-approval-note" style="display:none;padding:12px 14px;background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.25);border-radius:8px;margin-bottom:16px">
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">⏳ Admin approval required</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:6px"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Admin approval required</div>
           <div style="font-size:12.5px;color:var(--muted);line-height:1.6">Your registration will be reviewed by the court admin. You'll be able to sign in once approved. Please fill in your profile details above accurately.</div>
         </div>
         <button class="btn btn-gold btn-full" id="reg-btn" onclick="doRegister()">Create Account →</button>
@@ -558,7 +563,7 @@ tbody tr:hover td{background:#FAFAF8}
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="sb-brand">
-      <div class="sb-brand-icon">⚖️</div>
+      <div class="sb-brand-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M5 6l7-3 7 3"/><path d="M4 10v11"/><path d="M20 10v11"/><path d="M8 14v3"/><path d="M12 14v3"/><path d="M16 14v3"/></svg></div>
       <div>
         <div class="sb-brand-name">Adalat</div>
         <div class="sb-brand-sub">Court Management</div>
@@ -573,7 +578,7 @@ tbody tr:hover td{background:#FAFAF8}
     </div>
     <nav class="sb-nav" id="sb-nav"></nav>
     <div class="sb-footer">
-      <button class="btn-logout" onclick="doLogout()">🚪 Sign out</button>
+      <button class="btn-logout" onclick="doLogout()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Sign out</button>
     </div>
   </div>
 
@@ -584,7 +589,7 @@ tbody tr:hover td{background:#FAFAF8}
   <div class="main-wrap">
     <div class="topbar">
       <div style="display:flex;align-items:center;gap:12px">
-        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <button class="menu-toggle" onclick="toggleSidebar()"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
         <div class="topbar-title" id="topbar-title">Dashboard</div>
       </div>
       <div class="topbar-right">
@@ -645,7 +650,48 @@ tbody tr:hover td{background:#FAFAF8}
 <!-- Toast container -->
 <div id="toast-container"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.383.0/umd/lucide.min.js"></script>
 <script>
+// ════════════════════════════════════════════════════════════════════════
+//  SVG ICON HELPER  — replaces all emojis with Lucide SVG icons
+// ════════════════════════════════════════════════════════════════════════
+const ICONS = {
+  // Lucide icon name → SVG path(s)
+  scale:       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M3 9h18"/><path d="M3 9l4-4"/><path d="M21 9l-4-4"/><path d="M5 20h14"/><path d="M3 9c0 2.5 2 5 4 6"/><path d="M21 9c0 2.5-2 5-4 6"/></svg>',
+  judge:       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/><path d="M8 14l-2 4h12l-2-4"/></svg>',
+  clipboard:   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/></svg>',
+  user:        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>',
+  building:    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M5 6l7-3 7 3"/><path d="M4 10v11"/><path d="M20 10v11"/><path d="M8 14v3"/><path d="M12 14v3"/><path d="M16 14v3"/></svg>',
+  checkCircle: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
+  key:         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>',
+  clock:       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+  folder:      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
+  logOut:      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+  search:      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+  menu:        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+  circleRed:   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#B93030" stroke="none"><circle cx="12" cy="12" r="10"/></svg>',
+  circleBlue:  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1A6FA8" stroke="none"><circle cx="12" cy="12" r="10"/></svg>',
+  warning:     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  mail:        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>',
+  phone:       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12 19.79 19.79 0 0 1 1.08 3.4 2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16z"/></svg>',
+  idCard:      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 9h4"/><path d="M14 13h4"/></svg>',
+  upload:      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+  check:       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  x:           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+};
+
+/**
+ * Returns an inline SVG icon wrapped in a span.
+ * @param {string} name  — key from ICONS map
+ * @param {number} size  — px size (default 16)
+ * @param {string} color — CSS color (default 'currentColor')
+ */
+function icon(name, size = 16, color = 'currentColor') {
+  const svg = (ICONS[name] || ICONS.scale)
+    .replace('<svg ', `<svg width="${size}" height="${size}" style="color:${color}" `);
+  return `<span class="ico">${svg}</span>`;
+}
+
 // ════════════════════════════════════════════════════════════════════════
 //  CONFIG
 // ════════════════════════════════════════════════════════════════════════
@@ -693,7 +739,7 @@ async function api(method, path, body = null) {
 function toast(msg, type = 'success') {
   const el = document.createElement('div');
   el.className = `toast toast-${type}`;
-  el.innerHTML = `<span>${type === 'success' ? '✓' : '✕'}</span><span>${msg}</span>`;
+  el.innerHTML = `<span>${type === 'success' ? icon('check',14) : icon('x',14)}</span><span>${msg}</span>`;
   el.onclick = () => el.remove();
   document.getElementById('toast-container').appendChild(el);
   setTimeout(() => el.remove(), 3500);
@@ -789,10 +835,10 @@ function initApp() {
 //  NAV
 // ════════════════════════════════════════════════════════════════════════
 const NAV = {
-  ADMIN:  [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'judges', icon:'👨‍⚖️', label:'Judges' }, { id:'lawyers', icon:'📋', label:'Lawyers' }, { id:'clients', icon:'👤', label:'Clients' }, { id:'cases', icon:'⚖️', label:'All Cases' }, { id:'approvals', icon:'✅', label:'Approvals' }, { id:'accounts', icon:'🔑', label:'Accounts' }],
-  JUDGE:  [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'my-cases', icon:'⚖️', label:'My Cases' }, { id:'lawyers', icon:'📋', label:'Lawyers' }, { id:'clients', icon:'👤', label:'Clients' }],
-  LAWYER: [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'my-cases', icon:'⚖️', label:'My Cases' }, { id:'clients', icon:'👤', label:'My Clients' }, { id:'all-cases', icon:'📁', label:'All Cases' }],
-  CLIENT: [{ id:'dashboard', icon:'🏛️', label:'Dashboard' }, { id:'my-cases', icon:'⚖️', label:'My Cases' }],
+  ADMIN:  [{ id:'dashboard', icon:'building',   label:'Dashboard' }, { id:'judges', icon:'judge',    label:'Judges' }, { id:'lawyers', icon:'clipboard', label:'Lawyers' }, { id:'clients', icon:'user',      label:'Clients' }, { id:'cases', icon:'scale',    label:'All Cases' }, { id:'approvals', icon:'checkCircle', label:'Approvals' }, { id:'accounts', icon:'key', label:'Accounts' }],
+  JUDGE:  [{ id:'dashboard', icon:'building',   label:'Dashboard' }, { id:'my-cases', icon:'scale',  label:'My Cases' }, { id:'lawyers', icon:'clipboard', label:'Lawyers' }, { id:'clients', icon:'user',      label:'Clients' }],
+  LAWYER: [{ id:'dashboard', icon:'building',   label:'Dashboard' }, { id:'my-cases', icon:'scale',  label:'My Cases' }, { id:'clients', icon:'user',      label:'My Clients' }, { id:'all-cases', icon:'folder', label:'All Cases' }],
+  CLIENT: [{ id:'dashboard', icon:'building',   label:'Dashboard' }, { id:'my-cases', icon:'scale',  label:'My Cases' }],
 };
 
 const PAGE_TITLES = { dashboard:'Dashboard', judges:'Judges', lawyers:'Lawyers', clients:'Clients', cases:'Cases', 'my-cases':'My Cases', 'all-cases':'All Cases', accounts:'Login Accounts', approvals:'Pending Approvals' };
@@ -801,7 +847,7 @@ function buildNav() {
   const items = NAV[state.role] || NAV.CLIENT;
   const nav = document.getElementById('sb-nav');
   nav.innerHTML = `<div class="sb-section-label">Navigation</div>` +
-    items.map(i => `<button class="nav-item" id="nav-${i.id}" onclick="navigate('${i.id}')"><span class="nav-icon">${i.icon}</span><span>${i.label}</span></button>`).join('');
+    items.map(i => `<button class="nav-item" id="nav-${i.id}" onclick="navigate('${i.id}')"><span class="nav-icon">${icon(i.icon,16)}</span><span>${i.label}</span></button>`).join('');
 }
 
 function navigate(page) {
@@ -864,7 +910,7 @@ function tableWrap(cols, rows, emptyMsg) {
   const thead = `<thead><tr>${cols.map(c => `<th>${c.label}</th>`).join('')}</tr></thead>`;
   let tbody;
   if (!rows || rows.length === 0) {
-    tbody = `<tbody><tr class="empty-row"><td colspan="${cols.length}"><span class="empty-icon">📂</span>${emptyMsg||'No records found'}</td></tr></tbody>`;
+    tbody = `<tbody><tr class="empty-row"><td colspan="${cols.length}"><span class="empty-icon">${icon('folder',28)}</span>${emptyMsg||'No records found'}</td></tr></tbody>`;
   } else {
     tbody = `<tbody>${rows.map(row => `<tr>${cols.map(c => `<td>${c.render ? c.render(row) : (row[c.key]??'—')}</td>`).join('')}</tr>`).join('')}</tbody>`;
   }
@@ -921,12 +967,12 @@ async function renderAdminDashboard() {
       <div class="section-title" style="margin-bottom:4px">System Overview</div>
       <div class="dash-subtitle">Full administrative view of the court management system</div>
       <div class="stats-grid">
-        ${statCard('Total Judges',   state.cachedJudges.length,  '👨‍⚖️', 'rgba(11,25,41,.08)',    'var(--text)')}
-        ${statCard('Total Lawyers',  state.cachedLawyers.length, '📋',  'rgba(107,48,176,.1)', '#6B30B0')}
-        ${statCard('Total Clients',  state.cachedClients.length, '👤',  'rgba(33,122,75,.1)',  'var(--success)')}
-        ${statCard('Active Cases',   byStatus['IN_PROGRESS']||0, '⚖️',  'rgba(107,48,176,.1)', '#6B30B0')}
-        ${statCard('Pending Cases',  byStatus['PENDING']||0,     '⏳',  'rgba(200,168,75,.12)','var(--gold)')}
-        ${statCard('Closed Cases',   byStatus['CLOSED']||0,      '✅',  'rgba(33,122,75,.1)',  'var(--success)')}
+        ${statCard('Total Judges',   state.cachedJudges.length,  icon('judge',20),       'rgba(11,25,41,.08)',    'var(--text)')}
+        ${statCard('Total Lawyers',  state.cachedLawyers.length, icon('clipboard',20),   'rgba(107,48,176,.1)', '#6B30B0')}
+        ${statCard('Total Clients',  state.cachedClients.length, icon('user',20),        'rgba(33,122,75,.1)',  'var(--success)')}
+        ${statCard('Active Cases',   byStatus['IN_PROGRESS']||0, icon('scale',20),       'rgba(107,48,176,.1)', '#6B30B0')}
+        ${statCard('Pending Cases',  byStatus['PENDING']||0,     icon('clock',20),       'rgba(200,168,75,.12)','var(--gold)')}
+        ${statCard('Closed Cases',   byStatus['CLOSED']||0,      icon('checkCircle',20), 'rgba(33,122,75,.1)',  'var(--success)')}
       </div>
       <div class="two-col">
         <div class="card">
@@ -946,23 +992,23 @@ async function renderAdminDashboard() {
           <div class="card-header"><span class="card-title">Quick Actions</span></div>
           <div class="card-body" style="display:grid;gap:10px">
             <button class="quick-action" onclick="openAccountModal()">
-              <span class="qa-icon">🔑</span>
+              <span class="qa-icon">${icon('key',20)}</span>
               <div><span class="qa-title">Create Login Account</span><span class="qa-desc">Give a judge, lawyer or client access</span></div>
             </button>
             <button class="quick-action" onclick="navigate('judges')">
-              <span class="qa-icon">👨‍⚖️</span>
+              <span class="qa-icon">${icon('judge',20)}</span>
               <div><span class="qa-title">Manage Judges</span><span class="qa-desc">Add or update judge records</span></div>
             </button>
             <button class="quick-action" onclick="navigate('lawyers')">
-              <span class="qa-icon">📋</span>
+              <span class="qa-icon">${icon('clipboard',20)}</span>
               <div><span class="qa-title">Manage Lawyers</span><span class="qa-desc">Register advocates</span></div>
             </button>
             <button class="quick-action" onclick="navigate('cases')">
-              <span class="qa-icon">⚖️</span>
+              <span class="qa-icon">${icon('scale',20)}</span>
               <div><span class="qa-title">View All Cases</span><span class="qa-desc">Browse and file court cases</span></div>
             </button>
             <button class="quick-action" onclick="navigate('approvals')">
-              <span class="qa-icon">✅</span>
+              <span class="qa-icon">${icon('checkCircle',20)}</span>
               <div><span class="qa-title">Review Approvals</span><span class="qa-desc">Approve or reject pending judge/lawyer registrations</span></div>
             </button>
           </div>
@@ -979,7 +1025,7 @@ async function renderAdminDashboard() {
 async function renderJudgeDashboard() {
   const el = document.getElementById('main-content');
   if (!state.domainId) {
-    el.innerHTML = `<div class="hint-box"><div class="hint-title">⚠️ Profile not linked</div><div class="hint-body">Your account is not linked to a judge profile. Ask the admin to link your account.</div></div>`;
+    el.innerHTML = `<div class="hint-box"><div class="hint-title"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Profile not linked</div><div class="hint-body">Your account is not linked to a judge profile. Ask the admin to link your account.</div></div>`;
     return;
   }
   try {
@@ -992,11 +1038,11 @@ async function renderJudgeDashboard() {
       <div class="section-title" style="margin-bottom:4px">Judge's Chamber</div>
       <div class="dash-subtitle">Cases currently under your jurisdiction</div>
       <div class="stats-grid">
-        ${statCard('Total Cases',    cases.length,               '⚖️', 'rgba(11,25,41,.08)',   'var(--text)')}
-        ${statCard('Active',         byStatus['IN_PROGRESS']||0, '🔴', 'rgba(185,48,48,.1)',   'var(--danger)')}
-        ${statCard('Hearing',        byStatus['HEARING']||0,     '🔵', 'rgba(26,111,168,.1)',  'var(--info)')}
-        ${statCard('Pending',        byStatus['PENDING']||0,     '⏳', 'rgba(200,168,75,.12)', 'var(--gold)')}
-        ${statCard('Closed',         byStatus['CLOSED']||0,      '✅', 'rgba(33,122,75,.1)',   'var(--success)')}
+        ${statCard('Total Cases',    cases.length,               icon('scale',20),       'rgba(11,25,41,.08)',   'var(--text)')}
+        ${statCard('Active',         byStatus['IN_PROGRESS']||0, icon('circleRed',20),   'rgba(185,48,48,.1)',   'var(--danger)')}
+        ${statCard('Hearing',        byStatus['HEARING']||0,     icon('circleBlue',20),  'rgba(26,111,168,.1)',  'var(--info)')}
+        ${statCard('Pending',        byStatus['PENDING']||0,     icon('clock',20),       'rgba(200,168,75,.12)', 'var(--gold)')}
+        ${statCard('Closed',         byStatus['CLOSED']||0,      icon('checkCircle',20), 'rgba(33,122,75,.1)',   'var(--success)')}
       </div>
       <div class="card">
         <div class="card-header">
@@ -1004,7 +1050,7 @@ async function renderJudgeDashboard() {
           <span style="font-size:12px;color:var(--muted)">${upcoming.length} case${upcoming.length!==1?'s':''}</span>
         </div>
         ${upcoming.length === 0
-          ? `<div style="text-align:center;padding:50px;color:var(--muted)"><div style="font-size:32px;margin-bottom:8px">🏛️</div><div>No active cases assigned.</div></div>`
+          ? `<div style="text-align:center;padding:50px;color:var(--muted)"><div style="font-size:32px;margin-bottom:8px">${icon('building',40)}</div><div>No active cases assigned.</div></div>`
           : upcoming.map(c => `
             <div class="case-row">
               <div class="case-num">#${c.caseId}</div>
@@ -1026,7 +1072,7 @@ async function renderJudgeDashboard() {
 async function renderLawyerDashboard() {
   const el = document.getElementById('main-content');
   if (!state.domainId) {
-    el.innerHTML = `<div class="hint-box"><div class="hint-title">⚠️ Profile not linked</div><div class="hint-body">Your account is not linked to a lawyer profile. Ask the admin to link your account.</div></div>`;
+    el.innerHTML = `<div class="hint-box"><div class="hint-title"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Profile not linked</div><div class="hint-body">Your account is not linked to a lawyer profile. Ask the admin to link your account.</div></div>`;
     return;
   }
   try {
@@ -1039,16 +1085,16 @@ async function renderLawyerDashboard() {
       <div class="section-title" style="margin-bottom:4px">Advocate's Brief</div>
       <div class="dash-subtitle">Your caseload and client overview</div>
       <div class="stats-grid">
-        ${statCard('Total Cases',  cases.length,               '⚖️', 'rgba(107,48,176,.1)', '#6B30B0')}
-        ${statCard('Active',       byStatus['IN_PROGRESS']||0, '🔴', 'rgba(185,48,48,.1)',  'var(--danger)')}
-        ${statCard('Pending',      byStatus['PENDING']||0,     '⏳', 'rgba(200,168,75,.12)','var(--gold)')}
-        ${statCard('Clients',      clients.length,             '👤', 'rgba(33,122,75,.1)',  'var(--success)')}
+        ${statCard('Total Cases',  cases.length,               icon('scale',20),       'rgba(107,48,176,.1)', '#6B30B0')}
+        ${statCard('Active',       byStatus['IN_PROGRESS']||0, icon('circleRed',20),   'rgba(185,48,48,.1)',  'var(--danger)')}
+        ${statCard('Pending',      byStatus['PENDING']||0,     icon('clock',20),       'rgba(200,168,75,.12)','var(--gold)')}
+        ${statCard('Clients',      clients.length,             icon('user',20),        'rgba(33,122,75,.1)',  'var(--success)')}
       </div>
       <div class="two-col">
         <div class="card">
           <div class="card-header"><span class="card-title">Case Docket</span></div>
           ${cases.length === 0
-            ? `<div style="text-align:center;padding:50px;color:var(--muted)"><div style="font-size:32px;margin-bottom:8px">📋</div><div>No cases assigned yet.</div></div>`
+            ? `<div style="text-align:center;padding:50px;color:var(--muted)"><div style="font-size:32px;margin-bottom:8px">${icon('clipboard',40)}</div><div>No cases assigned yet.</div></div>`
             : cases.slice(0,10).map(c => `
               <div class="case-row">
                 <div style="flex:1;min-width:0">
@@ -1080,7 +1126,7 @@ async function renderLawyerDashboard() {
 async function renderClientDashboard() {
   const el = document.getElementById('main-content');
   if (!state.domainId) {
-    el.innerHTML = `<div class="hint-box"><div class="hint-title">⚠️ Profile not linked</div><div class="hint-body">Your account is not linked to a client profile. Contact the admin.</div></div>`;
+    el.innerHTML = `<div class="hint-box"><div class="hint-title"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Profile not linked</div><div class="hint-body">Your account is not linked to a client profile. Contact the admin.</div></div>`;
     return;
   }
   try {
@@ -1091,12 +1137,12 @@ async function renderClientDashboard() {
       <div class="section-title" style="margin-bottom:4px">Your Legal Cases</div>
       <div class="dash-subtitle">Track the status of all cases you are party to</div>
       <div class="stats-grid">
-        ${statCard('Total Cases',  cases.length,   '⚖️', 'rgba(33,122,75,.1)',  'var(--success)')}
-        ${statCard('Active',       active.length,  '🔴', 'rgba(185,48,48,.1)',  'var(--danger)')}
-        ${statCard('Closed',       cases.filter(c=>c.status==='CLOSED').length, '✅', 'rgba(11,25,41,.08)', 'var(--text)')}
+        ${statCard('Total Cases',  cases.length,   icon('scale',20),       'rgba(33,122,75,.1)',  'var(--success)')}
+        ${statCard('Active',       active.length,  icon('circleRed',20),   'rgba(185,48,48,.1)',  'var(--danger)')}
+        ${statCard('Closed',       cases.filter(c=>c.status==='CLOSED').length, icon('checkCircle',20), 'rgba(11,25,41,.08)', 'var(--text)')}
       </div>
       ${cases.length === 0
-        ? `<div class="card"><div style="text-align:center;padding:70px;color:var(--muted)"><div style="font-size:40px;margin-bottom:12px">⚖️</div><div style="font-size:16px;font-weight:600;margin-bottom:6px">No cases found</div><div style="font-size:13px">You have no court cases on record.</div></div></div>`
+        ? `<div class="card"><div style="text-align:center;padding:70px;color:var(--muted)"><div style="margin-bottom:12px">${icon('scale',40)}</div><div style="font-size:16px;font-weight:600;margin-bottom:6px">No cases found</div><div style="font-size:13px">You have no court cases on record.</div></div></div>`
         : cases.map(c => `
           <div class="client-card status-${c.status}">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
@@ -1144,7 +1190,7 @@ function renderJudgesTable(data, canEdit) {
     <div class="section-header">
       <h2 class="section-title">Judges</h2>
       <div class="section-actions">
-        <div class="search-wrap"><span class="search-icon">🔍</span><input class="form-input" id="judge-search" placeholder="Search judges…" oninput="filterJudges()" value="${q}"/></div>
+        <div class="search-wrap"><span class="search-icon">${icon('search',14)}</span><input class="form-input" id="judge-search" placeholder="Search judges…" oninput="filterJudges()" value="${q}"/></div>
         ${canEdit ? `<button class="btn btn-navy" onclick="openJudgeForm()">+ Add Judge</button>` : ''}
       </div>
     </div>
@@ -1222,7 +1268,7 @@ function renderLawyersTable(canEdit) {
     <div class="section-header">
       <h2 class="section-title">Lawyers</h2>
       <div class="section-actions">
-        <div class="search-wrap"><span class="search-icon">🔍</span><input class="form-input" id="lawyer-search" placeholder="Search lawyers…" oninput="filterLawyers()"/></div>
+        <div class="search-wrap"><span class="search-icon">${icon('search',14)}</span><input class="form-input" id="lawyer-search" placeholder="Search lawyers…" oninput="filterLawyers()"/></div>
         ${canEdit ? `<button class="btn btn-navy" onclick="openLawyerForm()">+ Add Lawyer</button>` : ''}
       </div>
     </div>
@@ -1293,7 +1339,7 @@ function renderClientsTable(canEdit) {
     <div class="section-header">
       <h2 class="section-title">Clients</h2>
       <div class="section-actions">
-        <div class="search-wrap"><span class="search-icon">🔍</span><input class="form-input" id="client-search" placeholder="Search clients…" oninput="filterClients()"/></div>
+        <div class="search-wrap"><span class="search-icon">${icon('search',14)}</span><input class="form-input" id="client-search" placeholder="Search clients…" oninput="filterClients()"/></div>
         ${canEdit ? `<button class="btn btn-navy" onclick="openClientForm()">+ Add Client</button>` : ''}
       </div>
     </div>
@@ -1374,7 +1420,7 @@ function renderCasesTable(title, canCreate, canEdit, canDelete) {
     <div class="section-header">
       <h2 class="section-title">${title}</h2>
       <div class="section-actions">
-        <div class="search-wrap"><span class="search-icon">🔍</span><input class="form-input" id="case-search" placeholder="Search cases…" oninput="filterCases()"/></div>
+        <div class="search-wrap"><span class="search-icon">${icon('search',14)}</span><input class="form-input" id="case-search" placeholder="Search cases…" oninput="filterCases()"/></div>
         <select class="form-select" id="case-status-filter" onchange="filterCases()" style="width:150px">
           <option value="">All statuses</option>${statusOpts(CASE_STATUSES)}
         </select>
@@ -1530,13 +1576,13 @@ function _buildCaseFormBody(c, isClient, isNew) {
     ? `<div class="form-group col-full">
          <label class="form-label">Judge</label>
          <div style="padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;background:#FAFAF8;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px">
-           <span>⚡</span><span>Will be auto-assigned to the judge with the lightest caseload</span>
+           <span>${icon('scale',14)}</span><span>Will be auto-assigned to the judge with the lightest caseload</span>
          </div>
        </div>`
     : `<div class="form-group col-full">
          <label class="form-label">Assigned Judge</label>
          <div style="padding:9px 12px;border:1.5px solid var(--border);border-radius:7px;background:#FAFAF8;font-size:13px;color:var(--text);display:flex;align-items:center;gap:8px">
-           <span>👨‍⚖️</span><span>${c.judgeName || 'Not yet assigned'}</span>
+           <span>${icon('judge',16)}</span><span>${c.judgeName || 'Not yet assigned'}</span>
          </div>
        </div>`;
 
@@ -1567,7 +1613,7 @@ function _buildCaseFormBody(c, isClient, isNew) {
         <div class="cnic-upload-zone" id="cnic-drop-zone" onclick="document.getElementById('f-cnic-file').click()">
           <input type="file" id="f-cnic-file" accept="image/*,.pdf" style="display:none" onchange="handleCnicUpload(this)"/>
           <div id="cnic-upload-placeholder">
-            <div style="font-size:24px;margin-bottom:6px">🪪</div>
+            <div style="margin-bottom:6px"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 9h4"/><path d="M14 13h4"/></svg></div>
             <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Upload CNIC</div>
             <div style="font-size:11.5px;color:var(--muted)">Click to browse · JPG, PNG or PDF · Max 5 MB</div>
           </div>
@@ -1621,21 +1667,21 @@ async function renderAccounts() {
         <button class="btn btn-navy" onclick="openAccountModal()">+ Create Account</button>
       </div>
       <div class="hint-box">
-        <div class="hint-title">💡 How account creation works</div>
+        <div class="hint-title" style="display:flex;align-items:center;gap:6px"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> How account creation works</div>
         <div class="hint-body">First add judges, lawyers, and clients through their sections. Then come here to create a login account for them and link it to their profile. They will see their personalised dashboard on sign-in.</div>
         <div class="role-count-grid">
           <div class="role-count-box">
-            <span style="font-size:16px;margin-right:6px">👨‍⚖️</span><span style="font-size:12px;font-weight:700;color:var(--info)">JUDGE</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;margin-bottom:2px"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/><path d="M8 14l-2 4h12l-2-4"/></svg><span style="font-size:12px;font-weight:700;color:var(--info)">JUDGE</span></span>
             <div class="role-count-num">${state.cachedJudges.length}</div>
             <div style="font-size:11px;color:var(--muted)">registered</div>
           </div>
           <div class="role-count-box">
-            <span style="font-size:16px;margin-right:6px">📋</span><span style="font-size:12px;font-weight:700;color:#6B30B0">LAWYER</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;margin-bottom:2px"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B30B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/></svg><span style="font-size:12px;font-weight:700;color:#6B30B0">LAWYER</span></span>
             <div class="role-count-num">${state.cachedLawyers.length}</div>
             <div style="font-size:11px;color:var(--muted)">registered</div>
           </div>
           <div class="role-count-box">
-            <span style="font-size:16px;margin-right:6px">👤</span><span style="font-size:12px;font-weight:700;color:var(--success)">CLIENT</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;margin-bottom:2px"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span style="font-size:12px;font-weight:700;color:var(--success)">CLIENT</span></span>
             <div class="role-count-num">${state.cachedClients.length}</div>
             <div style="font-size:11px;color:var(--muted)">registered</div>
           </div>
@@ -1665,7 +1711,7 @@ function openAccountModal() {
         <select class="form-select" id="f-domain"><option value="">Select…</option></select>
       </div>
       <div class="form-group col-full" style="padding:12px 14px;background:rgba(200,168,75,.08);border-radius:8px;border:1px solid rgba(200,168,75,.2)">
-        <span style="font-size:12.5px;color:var(--muted)">💡 Link the account to a Judge/Lawyer/Client record so they see their own data on login.</span>
+        <span style="font-size:12.5px;color:var(--muted)">${icon('warning',14)} Link the account to a Judge/Lawyer/Client record so they see their own data on login.</span>
       </div>
     </div>`;
   state.modalSaveFn = async () => {
@@ -1821,7 +1867,7 @@ async function doRegister() {
       if (existing) throw new Error('Username already taken.');
       window._pendingRegistrations.push({ ...body, _id: 'reg_' + Date.now(), _pw: password, _ts: Date.now() });
       const isApproval = true;
-      okEl.textContent = '✅ Registration submitted! Your account is pending admin approval. You will be able to sign in once approved.';
+      okEl.textContent = 'Registration submitted! Your account is pending admin approval. You will be able to sign in once approved.';
       okEl.style.display = 'block';
     } else {
       const msg = await api('POST', '/api/auth/register', body);
@@ -1860,11 +1906,11 @@ function handleCnicUpload(input) {
   const url   = URL.createObjectURL(file);
   wrap.style.display = 'block';
   zone.style.borderColor = 'var(--gold)';
-  ph.innerHTML = `<div style="font-size:12px;color:var(--success);font-weight:600">✓ ${file.name}</div><div style="font-size:11px;color:var(--muted)">Click to change</div>`;
+  ph.innerHTML = `<div style="font-size:12px;color:var(--success);font-weight:600">${icon('check',14)} ${file.name}</div><div style="font-size:11px;color:var(--muted)">Click to change</div>`;
   if (isImg) {
-    wrap.innerHTML = `<div class="cnic-preview"><img src="${url}" alt="CNIC" style="height:60px;border-radius:5px;object-fit:cover;border:1px solid var(--border)"/><div><div style="font-weight:600;font-size:12.5px;color:var(--text)">${file.name}</div><div style="font-size:11px;color:var(--muted)">${(file.size/1024).toFixed(0)} KB · ${file.type}</div></div><button type="button" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--danger);font-size:16px" onclick="clearCnicUpload()">✕</button></div>`;
+    wrap.innerHTML = `<div class="cnic-preview"><img src="${url}" alt="CNIC" style="height:60px;border-radius:5px;object-fit:cover;border:1px solid var(--border)"/><div><div style="font-weight:600;font-size:12.5px;color:var(--text)">${file.name}</div><div style="font-size:11px;color:var(--muted)">${(file.size/1024).toFixed(0)} KB · ${file.type}</div></div><button type="button" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--danger)" onclick="clearCnicUpload()">${icon('x',16)}</button></div>`;
   } else {
-    wrap.innerHTML = `<div class="cnic-preview"><span style="font-size:24px">📄</span><div><div style="font-weight:600;font-size:12.5px;color:var(--text)">${file.name}</div><div style="font-size:11px;color:var(--muted)">${(file.size/1024).toFixed(0)} KB · PDF</div></div><button type="button" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--danger);font-size:16px" onclick="clearCnicUpload()">✕</button></div>`;
+    wrap.innerHTML = `<div class="cnic-preview"><span>${icon('idCard',24)}</span><div><div style="font-weight:600;font-size:12.5px;color:var(--text)">${file.name}</div><div style="font-size:11px;color:var(--muted)">${(file.size/1024).toFixed(0)} KB · PDF</div></div><button type="button" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--danger)" onclick="clearCnicUpload()">${icon('x',16)}</button></div>`;
   }
 }
 
@@ -1874,7 +1920,7 @@ function clearCnicUpload() {
   const wrap = document.getElementById('cnic-preview-wrap');
   if (wrap) { wrap.style.display = 'none'; wrap.innerHTML = ''; }
   const ph = document.getElementById('cnic-upload-placeholder');
-  if (ph) ph.innerHTML = `<div style="font-size:24px;margin-bottom:6px">🪪</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Upload CNIC</div><div style="font-size:11.5px;color:var(--muted)">Click to browse · JPG, PNG or PDF · Max 5 MB</div>`;
+  if (ph) ph.innerHTML = `<div style="margin-bottom:6px">${icon('idCard',28)}</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Upload CNIC</div><div style="font-size:11.5px;color:var(--muted)">Click to browse · JPG, PNG or PDF · Max 5 MB</div>`;
   const zone = document.getElementById('cnic-drop-zone');
   if (zone) zone.style.borderColor = '';
 }
@@ -1902,13 +1948,13 @@ async function renderApprovals() {
 
     ${pendingList.length === 0 ? `
       <div class="card"><div style="text-align:center;padding:70px;color:var(--muted)">
-        <div style="font-size:40px;margin-bottom:12px">✅</div>
+        <div style="margin-bottom:12px">${icon('checkCircle',40)}</div>
         <div style="font-size:16px;font-weight:600;margin-bottom:6px">All caught up!</div>
         <div style="font-size:13px">No pending registrations to review.</div>
       </div></div>` : `
       <div class="card" style="margin-bottom:20px">
         <div class="card-header">
-          <span class="card-title">⏳ Awaiting Review</span>
+          <span class="card-title" style="display:flex;align-items:center;gap:6px">${icon('clock',16)} Awaiting Review</span>
           <span style="font-size:12px;color:var(--muted)">${pendingList.length} registration${pendingList.length!==1?'s':''}</span>
         </div>
         <div class="card-body" style="padding:0">
@@ -1916,23 +1962,23 @@ async function renderApprovals() {
             <div class="approval-card" id="acard-${r._id}">
               <div style="flex:1;min-width:0">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                  <span style="font-size:15px">${r.role==='JUDGE'?'👨‍⚖️':'📋'}</span>
+                  <span>${r.role==='JUDGE'?icon('judge',16):icon('clipboard',16)}</span>
                   <span style="font-weight:700;font-size:14px;color:var(--text)">${r.fullName||r.username}</span>
                   ${badge(r.role)}
                 </div>
                 <div style="font-size:12px;color:var(--muted);line-height:1.7">
-                  <span>🔑 Username: <strong>${r.username}</strong></span>
-                  ${r.email ? ` · 📧 ${r.email}` : ''}
-                  ${r.contactNo ? ` · 📞 ${r.contactNo}` : ''}
-                  ${r.courtRoom ? ` · 🏛️ ${r.courtRoom}` : ''}
+                  <span style="display:inline-flex;align-items:center;gap:4px">${icon('key',12)} Username: <strong>${r.username}</strong></span>
+                  ${r.email ? ` · <span style="display:inline-flex;align-items:center;gap:3px">${icon('mail',12)} ${r.email}</span>` : ''}
+                  ${r.contactNo ? ` · <span style="display:inline-flex;align-items:center;gap:3px">${icon('phone',12)} ${r.contactNo}</span>` : ''}
+                  ${r.courtRoom ? ` · <span style="display:inline-flex;align-items:center;gap:3px">${icon('building',12)} ${r.courtRoom}</span>` : ''}
                   ${r.barNumber ? ` · BAR: <span class="code-badge">${r.barNumber}</span>` : ''}
                   ${r.specialization ? ` · ${r.specialization}` : ''}
                   <br><span style="color:var(--muted);font-size:11px">Registered: ${new Date(r._ts).toLocaleString('en-PK')}</span>
                 </div>
               </div>
               <div style="display:flex;gap:8px;flex-shrink:0">
-                <button class="btn btn-sm btn-success" onclick="approveRegistration('${r._id}')">✓ Approve</button>
-                <button class="btn btn-sm btn-danger" onclick="rejectRegistration('${r._id}')">✕ Reject</button>
+                <button class="btn btn-sm btn-success" onclick="approveRegistration('${r._id}')" style="display:flex;align-items:center;gap:4px">${icon('check',12)} Approve</button>
+                <button class="btn btn-sm btn-danger" onclick="rejectRegistration('${r._id}')" style="display:flex;align-items:center;gap:4px">${icon('x',12)} Reject</button>
               </div>
             </div>`).join('')}
         </div>
@@ -1946,12 +1992,12 @@ async function renderApprovals() {
             <div class="approval-card ${r.approvalStatus==='APPROVED'?'approved':'rejected'}" style="opacity:.75">
               <div style="flex:1">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
-                  <span>${r.role==='JUDGE'?'👨‍⚖️':'📋'}</span>
+                  <span>${r.role==='JUDGE'?icon('judge',16):icon('clipboard',16)}</span>
                   <span style="font-weight:600;font-size:13px;color:var(--text)">${r.fullName||r.username}</span>
                   ${badge(r.role)}
                   ${badge(r.approvalStatus)}
                 </div>
-                <div style="font-size:12px;color:var(--muted)">🔑 ${r.username} ${r.email?'· '+r.email:''}</div>
+                <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px">${icon('key',12)} ${r.username} ${r.email?'· '+r.email:''}</div>
               </div>
             </div>`).join('')}
         </div>
@@ -1992,12 +2038,12 @@ async function approveRegistration(id) {
 
     reg.approvalStatus = 'APPROVED';
     reg._profileId = profileId;
-    toast(`✅ ${reg.fullName||reg.username} approved — account linked to profile #${profileId}`);
+    toast(`${reg.fullName||reg.username} approved — account linked to profile #${profileId}`);
   } catch(e) {
     console.error('[Approve] Error:', e);
     // Profile may have been created but account registration failed — show specific error
     toast(`Approval failed: ${e.message}`, 'error');
-    if (btn) { btn.textContent = '✓ Approve'; btn.disabled = false; }
+    if (btn) { btn.innerHTML = `${icon('check',12)} Approve`; btn.disabled = false; }
     return;
   }
   renderApprovals();

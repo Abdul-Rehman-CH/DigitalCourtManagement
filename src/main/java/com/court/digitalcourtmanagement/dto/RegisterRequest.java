@@ -7,7 +7,6 @@ public class RegisterRequest {
     private String role;
     private Long domainEntityId;
 
-    // Extra fields for CLIENT self-registration
     private String fullName;
     private String cnicNumber;
     private String contactNo;
